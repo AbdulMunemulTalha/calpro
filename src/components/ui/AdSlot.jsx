@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-// Replace CLIENT_ID with your actual AdSense publisher ID: ca-pub-XXXXXXXXXXXXXXXX
-const ADSENSE_CLIENT = 'ca-pub-XXXXXXXXXXXXXXXX';
+const ADSENSE_CLIENT = 'ca-pub-2580237448099674';
 
 export function AdBanner({ slot, style = {} }) {
   const ref = useRef(null);
