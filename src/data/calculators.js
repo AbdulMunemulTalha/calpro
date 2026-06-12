@@ -297,3 +297,55 @@ export function getCalcsByNiche(niche) {
 export function getPopularCalcs() {
   return CALCULATORS.filter(c => c.popular);
 }
+
+// ── Internal linking clusters — topic-based cross-linking ──────────────────
+export const RELATED_CLUSTERS = {
+  // Finance clusters
+  'position-size':    ['risk-reward','pip-value','margin','drawdown-recovery','trading-plan'],
+  'pip-value':        ['position-size','risk-reward','profit-loss','margin'],
+  'risk-reward':      ['position-size','profit-loss','drawdown-recovery','trading-plan'],
+  'profit-loss':      ['risk-reward','position-size','stock-return','crypto-profit'],
+  'margin':           ['position-size','liquidation-price','risk-reward'],
+  'drawdown-recovery':['position-size','risk-reward','trading-plan','compound-interest'],
+  'compound-interest':['drip','net-worth','break-even','stock-return'],
+  'currency-converter':['pip-value','profit-loss','position-size'],
+  'stock-return':     ['drip','compound-interest','net-worth','profit-loss'],
+  'trading-plan':     ['position-size','risk-reward','drawdown-recovery','compound-interest'],
+  'break-even':       ['net-worth','compound-interest','rental-roi'],
+  'net-worth':        ['compound-interest','drip','stock-return'],
+  'drip':             ['compound-interest','stock-return','net-worth'],
+  'options-pl':       ['profit-loss','risk-reward','position-size'],
+  // Health clusters
+  'bmi-body-fat':     ['tdee','calorie-deficit','macro-calorie','ideal-weight'],
+  'calorie-deficit':  ['tdee','macro-calorie','bmi-body-fat','protein-intake'],
+  'macro-calorie':    ['tdee','calorie-deficit','protein-intake','bmi-body-fat'],
+  'tdee':             ['calorie-deficit','macro-calorie','bmi-body-fat'],
+  'one-rep-max':      ['protein-intake','macro-calorie','running-pace'],
+  'running-pace':     ['hydration','one-rep-max','tdee'],
+  'hydration':        ['running-pace','tdee','bmi-body-fat'],
+  'ideal-weight':     ['bmi-body-fat','calorie-deficit','tdee'],
+  'protein-intake':   ['macro-calorie','calorie-deficit','one-rep-max'],
+  // Real estate clusters
+  'mortgage':         ['rent-vs-buy','affordability','amortization','refinance'],
+  'rent-vs-buy':      ['mortgage','affordability','rental-roi','down-payment'],
+  'rental-roi':       ['gross-rental-yield','house-flip','mortgage','rent-vs-buy'],
+  'affordability':    ['mortgage','rent-vs-buy','down-payment'],
+  'refinance':        ['mortgage','amortization','down-payment'],
+  'down-payment':     ['mortgage','affordability','refinance'],
+  'stamp-duty':       ['mortgage','affordability','house-flip'],
+  'house-flip':       ['rental-roi','gross-rental-yield','mortgage','stamp-duty'],
+  'amortization':     ['mortgage','refinance','rent-vs-buy'],
+  'gross-rental-yield':['rental-roi','house-flip','mortgage'],
+  // Crypto clusters
+  'crypto-profit':    ['crypto-tax','crypto-position-size','crypto-dca','profit-loss'],
+  'crypto-dca':       ['btc-savings-plan','crypto-profit','staking-rewards'],
+  'crypto-tax':       ['crypto-profit','crypto-dca','ath-return'],
+  'mining-profit':    ['crypto-profit','crypto-dca','btc-savings-plan'],
+  'crypto-position-size':['liquidation-price','funding-rate','crypto-profit'],
+  'liquidation-price':['crypto-position-size','funding-rate','margin'],
+  'staking-rewards':  ['crypto-dca','btc-savings-plan','crypto-profit'],
+  'ath-return':       ['crypto-profit','crypto-dca','crypto-tax'],
+  'funding-rate':     ['liquidation-price','crypto-position-size','crypto-profit'],
+  'btc-savings-plan': ['crypto-dca','staking-rewards','compound-interest'],
+  'crypto-rebalance': ['crypto-dca','crypto-profit','btc-savings-plan'],
+};

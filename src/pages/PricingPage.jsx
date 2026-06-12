@@ -68,8 +68,23 @@ export default function PricingPage() {
   return (
     <>
       <Helmet>
-        <title>Pricing — CalPro</title>
-        <meta name="description" content="Free forever, or upgrade to Pro for an ad-free experience and premium features. Starting at $9/month." />
+        <title>Pricing — CalPro Free & Pro Calculator Plans</title>
+        <meta name="description" content="CalPro is free forever with 44 calculators. Upgrade to Pro for $9/month for an ad-free experience, saved calculations and premium features." />
+        <link rel="canonical" href="https://www.calpro.store/pricing" />
+        <meta property="og:title" content="CalPro Pricing — Free & Pro Plans" />
+        <meta property="og:description" content="Free forever with 44 calculators. Upgrade to Pro for $9/month for ad-free and premium features." />
+        <meta property="og:url" content="https://www.calpro.store/pricing" />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": "CalPro Pro",
+          "description": "Ad-free calculator experience with saved calculations and premium features",
+          "url": "https://www.calpro.store/pricing",
+          "offers": [
+            {"@type": "Offer", "name": "Monthly", "price": "9", "priceCurrency": "USD", "billingPeriod": "P1M"},
+            {"@type": "Offer", "name": "Yearly",  "price": "7", "priceCurrency": "USD", "billingPeriod": "P1M"}
+          ]
+        })}</script>
       </Helmet>
 
       <section style={{ padding: '4rem 0 2rem', textAlign: 'center' }}>

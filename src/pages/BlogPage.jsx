@@ -25,13 +25,23 @@ export default function BlogPage() {
   return (
     <>
       <Helmet>
-        <title>Blog — CalPro</title>
-        <meta name="description" content="Expert guides on trading, personal finance, fitness, real estate, and crypto." />
+        <title>Blog — Trading, Finance, Health & Crypto Guides | CalPro</title>
+        <meta name="description" content="Expert guides on forex trading, personal finance, fitness nutrition, real estate investing and cryptocurrency. Free educational content from CalPro." />
+        <link rel="canonical" href="https://www.calpro.store/blog" />
+        <meta property="og:title" content="CalPro Blog — Trading, Finance, Health & Crypto Guides" />
+        <meta property="og:description" content="Expert guides on forex trading, personal finance, fitness and crypto investing." />
+        <meta property="og:url" content="https://www.calpro.store/blog" />
+        <meta property="og:type" content="website" />
       </Helmet>
 
       <div style={{ background: 'var(--bg-1)', borderBottom: '1px solid var(--border)', padding: '2.5rem 0 1.5rem' }}>
         <div className="container">
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', fontWeight: 700, marginBottom: 8 }}>Blog</h1>
+          <nav style={{ fontSize: 13, color: 'var(--text-3)', marginBottom: 12 }}>
+            <a href="/" style={{ color: 'var(--text-3)', textDecoration: 'none' }}>Home</a>
+            <span style={{ margin: '0 6px' }}>/</span>
+            <span style={{ color: 'var(--text-2)' }}>Blog</span>
+          </nav>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', fontWeight: 700, marginBottom: 8 }}>Trading, Finance & Fitness Blog</h1>
           <p style={{ color: 'var(--text-2)' }}>Expert guides on finance, fitness, real estate, and crypto.</p>
         </div>
       </div>

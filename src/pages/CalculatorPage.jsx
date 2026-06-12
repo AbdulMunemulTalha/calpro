@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { TrendingUp, Heart, Home, Bitcoin, ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react';
-import { getCalcBySlug, getCalcsByNiche, NICHES } from '../data/calculators';
+import { getCalcBySlug, getCalcsByNiche, getCalcBySlug as getById, NICHES, RELATED_CLUSTERS, CALCULATORS } from '../data/calculators';
 import { CALC_COMPONENTS } from '../components/calculators/AllCalculators';
 import { AdBanner, AdRect, AffiliateBox } from '../components/ui/AdSlot';
 import { useStats } from '../lib/StatsContext';
@@ -87,7 +87,10 @@ export default function CalculatorPage() {
   const niche  = NICHES.find(n => n.id === calc.niche);
   const Icon   = NICHE_ICONS[calc.niche];
   const color  = NICHE_COLORS[calc.niche];
-  const related = getCalcsByNiche(calc.niche).filter(c => c.id !== calc.id).slice(0, 4);
+  // Use topic clusters for smarter internal linking, fall back to same niche
+  const clusterIds = RELATED_CLUSTERS[calc.id] || [];
+  const clusterCalcs = clusterIds.map(id => CALCULATORS.find(c => c.id === id)).filter(Boolean).slice(0, 6);
+  const related = clusterCalcs.length >= 3 ? clusterCalcs : getCalcsByNiche(calc.niche).filter(c => c.id !== calc.id).slice(0, 4);
 
   // ── JSON-LD schemas ──────────────────────────────────────────────────────
   const faqSchema = seo.faqs && seo.faqs.length ? {
@@ -204,11 +207,11 @@ export default function CalculatorPage() {
             {/* FAQ accordion */}
             <FAQ faqs={seo.faqs} />
 
-            {/* Related calculators */}
+            {/* Related calculators — topic-clustered internal links */}
             {related.length > 0 && (
               <div style={{ marginTop: '2rem' }}>
                 <h2 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: 12, color: 'var(--text-1)' }}>
-                  More {niche?.label} Calculators
+                  Related Calculators You Might Need
                 </h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 10 }}>
                   {related.map(r => (
