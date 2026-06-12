@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { TrendingUp, Heart, Home, Bitcoin, ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react';
+import { trackCalcUse as ga4TrackCalcUse, trackPageView as ga4PageView, trackBlogView } from '../lib/analytics';
 import { getCalcBySlug, getCalcsByNiche, getCalcBySlug as getById, NICHES, RELATED_CLUSTERS, CALCULATORS } from '../data/calculators';
 import { CALC_COMPONENTS } from '../components/calculators/AllCalculators';
 import { AdBanner, AdRect, AffiliateBox } from '../components/ui/AdSlot';
@@ -73,8 +74,21 @@ export default function CalculatorPage() {
   const seo    = CALC_SEO[slug] || {};
 
   useEffect(() => {
-    if (calc) { trackPageView('/calculators/' + slug); trackCalcUse(calc.id); }
+    if (calc) {
+      // Track page view (on page load)
+      trackPageView('/calculators/' + slug);
+      ga4PageView('/calculators/' + slug, calc.title + ' Calculator');
+    }
   }, [slug]);
+
+  // This is passed to each calculator component to call when Calculate is clicked
+  function onCalcUsed() {
+    if (!calc) return;
+    // Local admin stats
+    trackCalcUse(calc.id);
+    // Real GA4 event — fires only when user actually uses calculator
+    ga4TrackCalcUse(calc.id, calc.title);
+  }
 
   if (!calc) return (
     <div className="container section" style={{ textAlign: 'center' }}>
@@ -193,7 +207,7 @@ export default function CalculatorPage() {
 
             {/* Calculator widget */}
             <div className="card">
-              {CalcComponent ? <CalcComponent /> : <p style={{ color: 'var(--text-3)' }}>Calculator loading...</p>}
+              {CalcComponent ? <CalcComponent onCalcUsed={onCalcUsed} /> : <p style={{ color: 'var(--text-3)' }}>Calculator loading...</p>}
             </div>
 
             {/* Ad below calculator */}

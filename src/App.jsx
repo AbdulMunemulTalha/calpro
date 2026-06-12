@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import './index.css';
@@ -23,8 +23,12 @@ import { AdminProvider } from './lib/AdminContext';
 import { StatsProvider } from './lib/StatsContext';
 import { ThemeProvider } from './lib/ThemeContext';
 import CookieConsent from './components/ui/CookieConsent';
+import { initGA4 } from './lib/analytics';
 
 export default function App() {
+  // Initialize GA4 on app load
+  React.useEffect(() => { initGA4(); }, []);
+
   return (
     <HelmetProvider>
       <ThemeProvider>

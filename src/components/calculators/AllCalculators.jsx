@@ -68,7 +68,7 @@ function ChartWrap({ children, height = 200 }) {
 const TT_STYLE = { background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12, color: 'var(--text-1)' };
 
 // ─── 1. Position Size ────────────────────────────────────────────────────────
-export function PositionSizeCalc() {
+export function PositionSizeCalc({ onCalcUsed }) {
   const [dir, setDir] = useState('long');
   const [v, setV] = useState({ account: '', risk: '', entry: '', stop: '', target: '', commission: '' });
   const [res, setRes] = useState(null);
@@ -120,7 +120,7 @@ export function PositionSizeCalc() {
 }
 
 // ─── 2. Compound Interest ────────────────────────────────────────────────────
-export function CompoundInterestCalc() {
+export function CompoundInterestCalc({ onCalcUsed }) {
   const [v, setV] = useState({ principal: '', monthly: '', rate: '', years: '' });
   const [calcRes, setCalcRes] = useState(null);
   const s = n => e => setV(p => ({ ...p, [n]: parseFloat(e.target.value) || 0 }));
@@ -163,7 +163,7 @@ export function CompoundInterestCalc() {
 }
 
 // ─── 3. Options P&L ──────────────────────────────────────────────────────────
-export function OptionsPLCalc() {
+export function OptionsPLCalc({ onCalcUsed }) {
   const [v, setV] = useState({ type: 'call', strike: 100, premium: 5, qty: 1, current: 110 });
   const s = n => e => setV(p => ({ ...p, [n]: parseFloat(e.target.value) || 0 }));
 
@@ -218,7 +218,7 @@ export function OptionsPLCalc() {
 }
 
 // ─── 4. DRIP ─────────────────────────────────────────────────────────────────
-export function DRIPCalc() {
+export function DRIPCalc({ onCalcUsed }) {
   const [v, setV] = useState({ shares: 100, price: 50, yield: 3.5, growth: 5, years: 20 });
   const s = n => e => setV(p => ({ ...p, [n]: parseFloat(e.target.value) || 0 }));
 
@@ -261,7 +261,7 @@ export function DRIPCalc() {
 }
 
 // ─── 5. Break-Even Analysis ──────────────────────────────────────────────────
-export function BreakEvenCalc() {
+export function BreakEvenCalc({ onCalcUsed }) {
   const [v, setV] = useState({ fixed: 5000, variable: 20, price: 50 });
   const s = n => e => setV(p => ({ ...p, [n]: parseFloat(e.target.value) || 0 }));
 
@@ -305,7 +305,7 @@ export function BreakEvenCalc() {
 }
 
 // ─── 6. Net Worth Tracker ────────────────────────────────────────────────────
-export function NetWorthCalc() {
+export function NetWorthCalc({ onCalcUsed }) {
   const [assets, setAssets] = useState([{ label: 'Cash & savings', value: 15000 }, { label: 'Investments', value: 25000 }, { label: 'Property', value: 200000 }]);
   const [liabilities, setLiabilities] = useState([{ label: 'Mortgage', value: 150000 }, { label: 'Car loan', value: 8000 }, { label: 'Credit cards', value: 3000 }]);
 
@@ -352,7 +352,7 @@ export function NetWorthCalc() {
 }
 
 // ─── 7. Macro & Calorie ──────────────────────────────────────────────────────
-export function MacroCalorieCalc() {
+export function MacroCalorieCalc({ onCalcUsed }) {
   const [v, setV] = useState({ weight: 80, height: 175, age: 30, sex: 'male', activity: 1.55, goal: 'maintain' });
   const s = n => e => setV(p => ({ ...p, [n]: e.target.value }));
   const sn = n => e => setV(p => ({ ...p, [n]: parseFloat(e.target.value) || 0 }));
@@ -422,7 +422,7 @@ export function MacroCalorieCalc() {
 }
 
 // ─── 8. BMI & Body Fat ───────────────────────────────────────────────────────
-export function BMIBodyFatCalc() {
+export function BMIBodyFatCalc({ onCalcUsed }) {
   const [v, setV] = useState({ weight: 80, height: 175, age: 30, sex: 'male', waist: 85, neck: 38, hip: 0 });
   const sn = n => e => setV(p => ({ ...p, [n]: parseFloat(e.target.value) || 0 }));
   const s = n => e => setV(p => ({ ...p, [n]: e.target.value }));
@@ -471,7 +471,7 @@ export function BMIBodyFatCalc() {
 }
 
 // ─── 9. 1-Rep Max ────────────────────────────────────────────────────────────
-export function OneRepMaxCalc() {
+export function OneRepMaxCalc({ onCalcUsed }) {
   const [v, setV] = useState({ weight: 100, reps: 5, formula: 'epley' });
   const sn = n => e => setV(p => ({ ...p, [n]: parseFloat(e.target.value) || 0 }));
   const s = n => e => setV(p => ({ ...p, [n]: e.target.value }));
@@ -525,385 +525,434 @@ export function OneRepMaxCalc() {
 }
 
 // ─── 10. Running Pace ────────────────────────────────────────────────────────
-export function RunningPaceCalc() {
-  const [mins, setMins] = useState(25); const [secs, setSecs] = useState(0);
-  const [dist, setDist] = useState(5);
-  const totalSecs = mins * 60 + secs;
-  const pacePerKm = dist > 0 ? totalSecs / dist : 0;
-  const pacePerMile = pacePerKm * 1.60934;
-  const formatPace = s => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
-  const formatTime = s => { const h = Math.floor(s / 3600); const m = Math.floor((s % 3600) / 60); const sec = Math.round(s % 60); return h > 0 ? `${h}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}` : `${m}:${String(sec).padStart(2, '0')}`; };
-  const riegel = (d2) => totalSecs * Math.pow(d2 / dist, 1.06);
-  const races = [{ name: '5K', dist: 5 }, { name: '10K', dist: 10 }, { name: 'Half marathon', dist: 21.0975 }, { name: 'Marathon', dist: 42.195 }];
+export function RunningPaceCalc({ onCalcUsed }) {
+  const [v, setV] = useState({ dist: '', min: '', sec: '', unit: 'km' });
+  const [res, setRes] = useState(null);
+  const s = n => e => setV(p => ({ ...p, [n]: e.target.value }));
+
+  function calc() {
+    const dist = parseFloat(v.dist), min = parseFloat(v.min) || 0, sec = parseFloat(v.sec) || 0;
+    if (!dist || (!min && !sec)) return;
+    const total = min * 60 + sec;
+    const ppu = total / dist;
+    const pm = Math.floor(ppu / 60), ps = Math.round(ppu % 60);
+    const speed = (dist / (total / 3600)) * (v.unit === 'miles' ? 1.60934 : 1);
+    const races = [{ name: '5K', d: 5 }, { name: '10K', d: 10 }, { name: 'Half Marathon', d: 21.0975 }, { name: 'Marathon', d: 42.195 }];
+    const preds = races.map(r => { const t = ppu * r.d * (v.unit === 'miles' ? 0.621371 : 1); return { name: r.name, t: Math.floor(t/3600)+'h '+Math.floor((t%3600)/60)+'m '+Math.round(t%60)+'s' }; });
+    setRes({ pm, ps, speed, preds, unit: v.unit });
+  }
 
   return (
     <div>
       <InputGrid>
-        <Field label="Minutes"><input type="number" placeholder="e.g. 25" min={0} onChange={e => setMins(parseFloat(e.target.value) || 0)} /></Field>
-        <Field label="Seconds"><input type="number" placeholder="e.g. 0" min={0} max={59} onChange={e => setSecs(parseFloat(e.target.value) || 0)} /></Field>
-        <Field label="Distance (km)"><input type="number" placeholder="e.g. 5" step={0.1} onChange={e => setDist(parseFloat(e.target.value) || 0)} /></Field>
+        <Field label="Distance"><input type="number" placeholder="e.g. 5" onChange={s('dist')} /></Field>
+        <Field label="Unit"><select className="input" value={v.unit} onChange={s('unit')}><option value="km">Kilometers</option><option value="miles">Miles</option></select></Field>
+        <Field label="Minutes"><input type="number" placeholder="e.g. 25" onChange={s('min')} /></Field>
+        <Field label="Seconds"><input type="number" placeholder="e.g. 30" onChange={s('sec')} /></Field>
       </InputGrid>
-      <MetricGrid>
-        <Metric label="Pace / km" value={formatPace(pacePerKm)} accent />
-        <Metric label="Pace / mile" value={formatPace(pacePerMile)} />
-      </MetricGrid>
-      <div style={{ marginTop: 16 }}>
-        {races.map(r => (
-          <div key={r.name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', background: 'var(--bg-2)', borderRadius: 8, marginBottom: 6, border: '1px solid var(--border)' }}>
-            <span style={{ fontSize: 14, color: 'var(--text-2)' }}>{r.name}</span>
-            <span style={{ fontSize: 16, fontWeight: 600, fontFamily: 'var(--font-mono)', color: 'var(--text-1)' }}>{formatTime(riegel(r.dist))}</span>
-          </div>
-        ))}
-      </div>
+      <CalcBtn onClick={calc} onCalcUsed={onCalcUsed} />
+      {res && <>
+        <div style={{ textAlign: 'center', padding: 20, background: 'var(--bg-1)', borderRadius: 14, marginBottom: 16 }}>
+          <div style={{ fontSize: 14, color: 'var(--text-2)', marginBottom: 4 }}>Your pace</div>
+          <div style={{ fontSize: 48, fontWeight: 800, color: 'var(--accent)', lineHeight: 1 }}>{res.pm}:{String(res.ps).padStart(2,'0')}</div>
+          <div style={{ fontSize: 14, color: 'var(--text-3)' }}>min/{res.unit} &nbsp;|&nbsp; {res.speed.toFixed(1)} km/h</div>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {res.preds.map((p, i) => (
+            <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 16px', background: 'var(--bg-1)', border: '1px solid var(--border)', borderRadius: 10 }}>
+              <span style={{ fontWeight: 600, fontSize: 13 }}>{p.name}</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 14, color: 'var(--accent)' }}>{p.t}</span>
+            </div>
+          ))}
+        </div>
+      </>}
     </div>
   );
 }
 
-// ─── 11. Hydration ───────────────────────────────────────────────────────────
-export function HydrationCalc() {
-  const [v, setV] = useState({ weight: 75, activity: 1, climate: 0, coffee: 0, alcohol: 0 });
-  const sn = n => e => setV(p => ({ ...p, [n]: parseFloat(e.target.value) || 0 }));
-  const base = v.weight * 0.033;
-  const actAdj = [0, 0.35, 0.7, 1.0][Math.min(v.activity, 3)] || 0;
-  const climateAdj = [0, 0.3, 0.6][Math.min(v.climate, 2)] || 0;
-  const coffeeAdj = v.coffee * 0.15;
-  const alcoholAdj = v.alcohol * 0.35;
-  const total = base + actAdj + climateAdj + coffeeAdj + alcoholAdj;
-  const oz = total * 33.814;
-  const cups = total * 4.22675;
+export function HydrationCalc({ onCalcUsed }) {
+  const [v, setV] = useState({ weight: '', unit: 'kg', activity: '0', climate: '0', coffee: '', alcohol: '' });
+  const [res, setRes] = useState(null);
+  const s = n => e => setV(p => ({ ...p, [n]: e.target.value }));
+
+  function calc() {
+    let w = parseFloat(v.weight);
+    if (!w) return;
+    if (v.unit === 'lbs') w *= 0.453592;
+    let base = w * 0.033;
+    base += parseFloat(v.activity) * 0.35;
+    base += parseFloat(v.climate) * 0.5;
+    base += (parseFloat(v.coffee) || 0) * 0.15;
+    base += (parseFloat(v.alcohol) || 0) * 0.25;
+    setRes({ litres: base, oz: base * 33.814, cups: base * 4.227, glasses: Math.ceil(base / 0.25) });
+  }
 
   return (
     <div>
       <InputGrid>
-        <Field label="Body weight (kg)"><input type="number" placeholder="e.g. 75" onChange={sn('weight')} /></Field>
+        <Field label="Body weight"><input type="number" placeholder="e.g. 75" onChange={s('weight')} /></Field>
+        <Field label="Unit"><select className="input" value={v.unit} onChange={s('unit')}><option value="kg">Kilograms (kg)</option><option value="lbs">Pounds (lbs)</option></select></Field>
         <Field label="Activity level">
-          <select className="input" onChange={sn('activity')}>
-            <option value={0}>Sedentary</option>
-            <option value={1}>Light</option>
-            <option value={2}>Moderate</option>
-            <option value={3}>Intense</option>
+          <select className="input" value={v.activity} onChange={s('activity')}>
+            <option value="0">Sedentary (desk job)</option>
+            <option value="1">Light exercise (1–3×/wk)</option>
+            <option value="2">Moderate exercise (3–5×/wk)</option>
+            <option value="3">Heavy exercise (daily)</option>
           </select>
         </Field>
         <Field label="Climate">
-          <select className="input" onChange={sn('climate')}>
-            <option value={0}>Temperate</option>
-            <option value={1}>Warm</option>
-            <option value={2}>Hot</option>
+          <select className="input" value={v.climate} onChange={s('climate')}>
+            <option value="0">Temperate / Normal</option>
+            <option value="1">Hot / Humid</option>
+            <option value="2">Very Hot / Desert</option>
           </select>
         </Field>
-        <Field label="Coffees / day"><input type="number" placeholder="e.g. 0" min={0} max={10} onChange={sn('coffee')} /></Field>
-        <Field label="Alcoholic drinks / day"><input type="number" placeholder="e.g. 0" min={0} onChange={sn('alcohol')} /></Field>
+        <Field label="Coffees per day"><input type="number" placeholder="e.g. 2" onChange={s('coffee')} /></Field>
+        <Field label="Alcoholic drinks / day"><input type="number" placeholder="e.g. 1" onChange={s('alcohol')} /></Field>
       </InputGrid>
-      <MetricGrid>
-        <Metric label="Daily water" value={fmt(total, 1) + ' L'} accent />
-        <Metric label="In oz" value={fmtInt(oz) + ' oz'} />
-        <Metric label="In cups" value={fmtInt(cups) + ' cups'} />
-        <Metric label="Base need" value={fmt(base, 1) + ' L'} sub="before adjustments" />
-      </MetricGrid>
+      <CalcBtn onClick={calc} onCalcUsed={onCalcUsed} />
+      {res && <>
+        <div style={{ textAlign: 'center', padding: 20, background: 'var(--bg-1)', borderRadius: 14, marginBottom: 16 }}>
+          <div style={{ fontSize: 14, color: 'var(--text-2)', marginBottom: 4 }}>Drink at least</div>
+          <div style={{ fontSize: 52, fontWeight: 800, color: '#06b6d4', lineHeight: 1 }}>{res.litres.toFixed(1)}L</div>
+          <div style={{ fontSize: 14, color: 'var(--text-3)' }}>of water per day</div>
+        </div>
+        <MetricGrid>
+          <Metric label="Litres" value={res.litres.toFixed(1) + ' L'} color="#06b6d4" />
+          <Metric label="Fluid oz" value={Math.round(res.oz) + ' oz'} />
+          <Metric label="Cups" value={Math.round(res.cups) + ' cups'} />
+          <Metric label="Glasses (250ml)" value={res.glasses + ' glasses'} />
+        </MetricGrid>
+      </>}
     </div>
   );
 }
 
-// ─── 12. Rent vs Buy ─────────────────────────────────────────────────────────
-export function RentVsBuyCalc() {
-  const [v, setV] = useState({ price: 400000, down: 20, rate: 7, term: 30, rent: 2000, invest: 7, years: 10, tax: 1.2, maint: 1 });
-  const sn = n => e => setV(p => ({ ...p, [n]: parseFloat(e.target.value) || 0 }));
+export function RentVsBuyCalc({ onCalcUsed }) {
+  const [v, setV] = useState({ price: '', down: '', rate: '', rent: '', invest: '', years: '' });
+  const [res, setRes] = useState(null);
+  const s = n => e => setV(p => ({ ...p, [n]: e.target.value }));
 
-  const downAmt = v.price * (v.down / 100);
-  const loan = v.price - downAmt;
-  const mo = v.rate / 100 / 12;
-  const n = v.term * 12;
-  const monthlyPayment = mo > 0 ? loan * mo * Math.pow(1 + mo, n) / (Math.pow(1 + mo, n) - 1) : loan / n;
-  const monthlyTax = v.price * (v.tax / 100) / 12;
-  const monthlyMaint = v.price * (v.maint / 100) / 12;
-  const totalBuyMonth = monthlyPayment + monthlyTax + monthlyMaint;
-
-  const data = Array.from({ length: v.years + 1 }, (_, yr) => {
-    const buyCost = yr === 0 ? downAmt : totalBuyMonth * 12 * yr + downAmt;
-    const rentCost = v.rent * 12 * yr;
-    const investGain = yr === 0 ? downAmt : downAmt * Math.pow(1 + v.invest / 100, yr);
-    const homeVal = v.price * Math.pow(1.03, yr);
-    return { year: yr, buy: Math.round(buyCost), rent: Math.round(rentCost), equity: Math.round(homeVal - (loan * Math.pow(1 + mo, yr * 12))) };
-  });
-
-  return (
-    <div>
-      <InputGrid>
-        <Field label="Home price" prefix="$"><input type="number" placeholder="e.g. 400000" step={10000} onChange={sn('price')} /></Field>
-        <Field label="Down payment %" suffix="%"><input type="number" placeholder="e.g. 20" onChange={sn('down')} /></Field>
-        <Field label="Mortgage rate" suffix="%"><input type="number" placeholder="e.g. 7" step={0.1} onChange={sn('rate')} /></Field>
-        <Field label="Loan term" suffix="yrs"><input type="number" placeholder="e.g. 30" onChange={sn('term')} /></Field>
-        <Field label="Monthly rent" prefix="$"><input type="number" placeholder="e.g. 2000" step={50} onChange={sn('rent')} /></Field>
-        <Field label="Compare years" suffix="yrs"><input type="number" placeholder="e.g. 10" min={1} max={30} onChange={sn('years')} /></Field>
-      </InputGrid>
-      <MetricGrid>
-        <Metric label="Monthly mortgage" value={fmtUSD(monthlyPayment)} accent />
-        <Metric label="Total monthly (buy)" value={fmtUSD(totalBuyMonth)} sub="mortgage + tax + maint" />
-        <Metric label="Monthly rent" value={fmtUSD(v.rent)} />
-        <Metric label="Buy premium / mo" value={fmtUSD(totalBuyMonth - v.rent)} color={totalBuyMonth > v.rent ? 'var(--red)' : 'var(--green)'} />
-      </MetricGrid>
-      <ChartWrap height={200}>
-        <AreaChart data={data}>
-          <XAxis dataKey="year" stroke="var(--text-3)" tick={{ fontSize: 11 }} />
-          <YAxis stroke="var(--text-3)" tick={{ fontSize: 11 }} tickFormatter={n => '$' + (n >= 1000 ? (n/1000).toFixed(0)+'k' : n)} />
-          <Tooltip contentStyle={TT_STYLE} formatter={v => fmtUSD(v)} />
-          <Area type="monotone" dataKey="buy" fill="rgba(59,130,246,0.1)" stroke="#3b82f6" strokeWidth={2} name="Buy total" />
-          <Area type="monotone" dataKey="rent" fill="rgba(239,68,68,0.1)" stroke="#ef4444" strokeWidth={2} name="Rent total" />
-        </AreaChart>
-      </ChartWrap>
-    </div>
-  );
-}
-
-// ─── 13. Mortgage ────────────────────────────────────────────────────────────
-export function MortgageCalc() {
-  const [v, setV] = useState({ loan: 320000, rate: 7, term: 30, extra: 0 });
-  const sn = n => e => setV(p => ({ ...p, [n]: parseFloat(e.target.value) || 0 }));
-
-  const mo = v.rate / 100 / 12;
-  const n = v.term * 12;
-  const base = mo > 0 ? v.loan * mo * Math.pow(1 + mo, n) / (Math.pow(1 + mo, n) - 1) : v.loan / n;
-  const total = base + (v.extra || 0);
-  const totalInterest = base * n - v.loan;
-
-  const amort = [];
-  let bal = v.loan;
-  for (let i = 1; i <= Math.min(n, 360); i++) {
-    const interest = bal * mo;
-    const principal = Math.min(total - interest, bal);
-    bal = Math.max(0, bal - principal);
-    if (i % 12 === 0) amort.push({ year: i / 12, balance: Math.round(bal), principal: Math.round(principal * 12), interest: Math.round(interest * 12) });
-    if (bal <= 0) break;
+  function calc() {
+    const price = parseFloat(v.price), down = parseFloat(v.down) || 20,
+          rate = parseFloat(v.rate) || 6.5, rent = parseFloat(v.rent),
+          invest = parseFloat(v.invest) || 7, years = parseFloat(v.years) || 10;
+    if (!price || !rent) return;
+    const downAmt = price * (down / 100), loan = price - downAmt;
+    const r = rate / 100 / 12, n = 30 * 12;
+    const monthly = loan * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+    const totalBuyCost = (monthly + price * 0.012 / 12 + price * 0.005 / 12) * years * 12 + downAmt;
+    const homeValue = price * Math.pow(1.04, years);
+    const equity = homeValue - loan * (1 - years / 30);
+    const totalRentCost = rent * 12 * years * 1.03;
+    const data = Array.from({ length: years + 1 }, (_, yr) => ({
+      year: yr,
+      buying: Math.round((monthly + price * 0.017 / 12) * yr * 12 + downAmt - (price * Math.pow(1.04, yr) - price)),
+      renting: Math.round(rent * 12 * yr * 1.015),
+    }));
+    setRes({ monthly, totalBuyCost, homeValue, equity, totalRentCost, data, years });
   }
 
   return (
     <div>
       <InputGrid>
-        <Field label="Loan amount" prefix="$"><input type="number" placeholder="e.g. 320000" step={5000} onChange={sn('loan')} /></Field>
-        <Field label="Interest rate" suffix="%"><input type="number" placeholder="e.g. 7" step={0.05} onChange={sn('rate')} /></Field>
-        <Field label="Loan term" suffix="yrs"><input type="number" placeholder="e.g. 30" onChange={sn('term')} /></Field>
-        <Field label="Extra monthly" prefix="$"><input type="number" placeholder="e.g. 0" step={50} onChange={sn('extra')} /></Field>
+        <Field label="Home price" prefix="$"><input type="number" placeholder="e.g. 400000" onChange={s('price')} /></Field>
+        <Field label="Down payment %" suffix="%"><input type="number" placeholder="e.g. 20" onChange={s('down')} /></Field>
+        <Field label="Interest rate %" suffix="%"><input type="number" placeholder="e.g. 6.5" step={0.1} onChange={s('rate')} /></Field>
+        <Field label="Monthly rent" prefix="$"><input type="number" placeholder="e.g. 2000" onChange={s('rent')} /></Field>
+        <Field label="Investment return %" suffix="%"><input type="number" placeholder="e.g. 7" onChange={s('invest')} /></Field>
+        <Field label="Years to compare" suffix="yrs"><input type="number" placeholder="e.g. 10" onChange={s('years')} /></Field>
       </InputGrid>
-      <MetricGrid>
-        <Metric label="Monthly payment" value={fmtUSD(base)} accent />
-        <Metric label="Total interest" value={fmtUSD(totalInterest)} color="var(--red)" />
-        <Metric label="Total paid" value={fmtUSD(base * n)} />
-        {v.extra > 0 && <Metric label="Interest saved" value={fmtUSD(totalInterest * 0.15)} color="var(--green)" sub="est. with extra payment" />}
-      </MetricGrid>
-      <ChartWrap height={200}>
-        <AreaChart data={amort}>
-          <XAxis dataKey="year" stroke="var(--text-3)" tick={{ fontSize: 11 }} />
-          <YAxis stroke="var(--text-3)" tick={{ fontSize: 11 }} tickFormatter={n => '$' + (n >= 1000 ? (n/1000).toFixed(0)+'k' : n)} />
-          <Tooltip contentStyle={TT_STYLE} formatter={v => fmtUSD(v)} />
-          <Area type="monotone" dataKey="balance" fill="rgba(59,130,246,0.1)" stroke="#3b82f6" strokeWidth={2} name="Remaining balance" />
-        </AreaChart>
-      </ChartWrap>
+      <CalcBtn onClick={calc} onCalcUsed={onCalcUsed} />
+      {res && <>
+        <MetricGrid>
+          <Metric label="Monthly mortgage" value={'$' + Math.round(res.monthly).toLocaleString()} accent />
+          <Metric label="Home value" value={'$' + Math.round(res.homeValue).toLocaleString()} sub={'in ' + res.years + ' years'} color="var(--green)" />
+          <Metric label="Equity built" value={'$' + Math.round(res.equity).toLocaleString()} color="var(--green)" />
+          <Metric label="Total rent cost" value={'$' + Math.round(res.totalRentCost).toLocaleString()} color="var(--red)" />
+        </MetricGrid>
+        <ChartWrap height={200}>
+          <LineChart data={res.data}>
+            <XAxis dataKey="year" stroke="var(--text-3)" tick={{ fontSize: 11 }} />
+            <YAxis stroke="var(--text-3)" tick={{ fontSize: 11 }} tickFormatter={n => '$' + (n >= 1000 ? (n/1000).toFixed(0)+'k' : n)} />
+            <Tooltip contentStyle={TT_STYLE} formatter={v => '$' + Math.abs(v).toLocaleString()} />
+            <Line type="monotone" dataKey="buying" stroke="var(--accent)" strokeWidth={2} dot={false} name="Buying cost" />
+            <Line type="monotone" dataKey="renting" stroke="var(--amber)" strokeWidth={2} dot={false} name="Renting cost" />
+          </LineChart>
+        </ChartWrap>
+      </>}
     </div>
   );
 }
 
-// ─── 14. Rental ROI ──────────────────────────────────────────────────────────
-export function RentalROICalc() {
-  const [v, setV] = useState({ price: 250000, down: 25, rate: 7, rent: 2200, vacancy: 5, expenses: 800 });
-  const sn = n => e => setV(p => ({ ...p, [n]: parseFloat(e.target.value) || 0 }));
+export function MortgageCalc({ onCalcUsed }) {
+  const [v, setV] = useState({ loan: '', rate: '', term: '', extra: '' });
+  const [res, setRes] = useState(null);
+  const s = n => e => setV(p => ({ ...p, [n]: e.target.value }));
 
-  const downAmt = v.price * (v.down / 100);
-  const loan = v.price - downAmt;
-  const mo = v.rate / 100 / 12;
-  const n = 30 * 12;
-  const mortgage = mo > 0 ? loan * mo * Math.pow(1 + mo, n) / (Math.pow(1 + mo, n) - 1) : 0;
-  const grossRent = v.rent * 12 * (1 - v.vacancy / 100);
-  const noi = grossRent - v.expenses * 12;
-  const cashFlow = noi - mortgage * 12;
-  const cashOnCash = downAmt > 0 ? (cashFlow / downAmt) * 100 : 0;
-  const capRate = v.price > 0 ? (noi / v.price) * 100 : 0;
-
-  return (
-    <div>
-      <InputGrid>
-        <Field label="Purchase price" prefix="$"><input type="number" placeholder="e.g. 250000" step={5000} onChange={sn('price')} /></Field>
-        <Field label="Down payment %" suffix="%"><input type="number" placeholder="e.g. 25" onChange={sn('down')} /></Field>
-        <Field label="Mortgage rate" suffix="%"><input type="number" placeholder="e.g. 7" step={0.1} onChange={sn('rate')} /></Field>
-        <Field label="Monthly rent" prefix="$"><input type="number" placeholder="e.g. 2200" step={50} onChange={sn('rent')} /></Field>
-        <Field label="Vacancy rate" suffix="%"><input type="number" placeholder="e.g. 5" step={0.5} onChange={sn('vacancy')} /></Field>
-        <Field label="Monthly expenses" prefix="$"><input type="number" placeholder="e.g. 800" step={50} onChange={sn('expenses')} /></Field>
-      </InputGrid>
-      <MetricGrid>
-        <Metric label="Monthly cash flow" value={fmtUSD(cashFlow / 12)} color={cashFlow >= 0 ? 'var(--green)' : 'var(--red)'} accent />
-        <Metric label="Cash-on-cash ROI" value={fmtPct(cashOnCash)} color={cashOnCash >= 8 ? 'var(--green)' : cashOnCash >= 5 ? 'var(--amber)' : 'var(--red)'} />
-        <Metric label="Cap rate" value={fmtPct(capRate)} sub="NOI / purchase price" />
-        <Metric label="Annual NOI" value={fmtUSD(noi)} />
-      </MetricGrid>
-    </div>
-  );
-}
-
-// ─── 15. House Flip ──────────────────────────────────────────────────────────
-export function HouseFlipCalc() {
-  const [v, setV] = useState({ purchase: 150000, rehab: 30000, holding: 2000, months: 6, arv: 240000, sellingCost: 8 });
-  const sn = n => e => setV(p => ({ ...p, [n]: parseFloat(e.target.value) || 0 }));
-
-  const totalCost = v.purchase + v.rehab + v.holding * v.months;
-  const sellingCosts = v.arv * (v.sellingCost / 100);
-  const netProfit = v.arv - totalCost - sellingCosts;
-  const roi = totalCost > 0 ? (netProfit / totalCost) * 100 : 0;
-  const annualized = v.months > 0 ? Math.pow(1 + roi / 100, 12 / v.months) * 100 - 100 : 0;
-  const rule70 = v.arv * 0.7 - v.rehab;
-
-  return (
-    <div>
-      <InputGrid>
-        <Field label="Purchase price" prefix="$"><input type="number" placeholder="e.g. 150000" step={5000} onChange={sn('purchase')} /></Field>
-        <Field label="Rehab costs" prefix="$"><input type="number" placeholder="e.g. 30000" step={1000} onChange={sn('rehab')} /></Field>
-        <Field label="Monthly holding" prefix="$"><input type="number" placeholder="e.g. 2000" step={100} onChange={sn('holding')} /></Field>
-        <Field label="Hold months" suffix="mo"><input type="number" placeholder="e.g. 6" min={1} onChange={sn('months')} /></Field>
-        <Field label="ARV (after repair)" prefix="$"><input type="number" placeholder="e.g. 240000" step={5000} onChange={sn('arv')} /></Field>
-        <Field label="Selling costs" suffix="%"><input type="number" placeholder="e.g. 8" step={0.5} onChange={sn('sellingCost')} /></Field>
-      </InputGrid>
-      <MetricGrid>
-        <Metric label="Net profit" value={fmtUSD(netProfit)} color={netProfit >= 0 ? 'var(--green)' : 'var(--red)'} accent />
-        <Metric label="ROI" value={fmtPct(roi)} color={roi >= 15 ? 'var(--green)' : roi >= 8 ? 'var(--amber)' : 'var(--red)'} />
-        <Metric label="Annualized ROI" value={fmtPct(annualized)} />
-        <Metric label="70% rule max offer" value={fmtUSD(rule70)} sub="0.7×ARV − rehab" />
-      </MetricGrid>
-      <div style={{ background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: 10, padding: '12px 16px', fontSize: 13 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: 6, borderBottom: '1px solid var(--border)', marginBottom: 6 }}>
-          <span style={{ color: 'var(--text-2)' }}>Purchase</span><span>{fmtUSD(v.purchase)}</span>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: 6, borderBottom: '1px solid var(--border)', marginBottom: 6 }}>
-          <span style={{ color: 'var(--text-2)' }}>Rehab</span><span>{fmtUSD(v.rehab)}</span>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: 6, borderBottom: '1px solid var(--border)', marginBottom: 6 }}>
-          <span style={{ color: 'var(--text-2)' }}>Holding ({v.months} mo)</span><span>{fmtUSD(v.holding * v.months)}</span>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: 6, borderBottom: '1px solid var(--border)', marginBottom: 6 }}>
-          <span style={{ color: 'var(--text-2)' }}>Selling costs</span><span style={{ color: 'var(--red)' }}>{fmtUSD(sellingCosts)}</span>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600 }}>
-          <span>Net profit</span><span style={{ color: netProfit >= 0 ? 'var(--green)' : 'var(--red)' }}>{fmtUSD(netProfit)}</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─── 16. Home Affordability ──────────────────────────────────────────────────
-export function AffordabilityCalc() {
-  const [v, setV] = useState({ income: 80000, debts: 400, down: 40000, rate: 7, term: 30 });
-  const sn = n => e => setV(p => ({ ...p, [n]: parseFloat(e.target.value) || 0 }));
-
-  const monthlyIncome = v.income / 12;
-  const maxHousingPayment28 = monthlyIncome * 0.28;
-  const maxTotalDebt36 = monthlyIncome * 0.36;
-  const maxFromDebt = Math.max(0, maxTotalDebt36 - v.debts);
-  const maxPayment = Math.min(maxHousingPayment28, maxFromDebt);
-  const mo = v.rate / 100 / 12;
-  const n = v.term * 12;
-  const maxLoan = mo > 0 ? maxPayment * (Math.pow(1 + mo, n) - 1) / (mo * Math.pow(1 + mo, n)) : maxPayment * n;
-  const maxPrice = maxLoan + v.down;
-
-  return (
-    <div>
-      <InputGrid>
-        <Field label="Annual income" prefix="$"><input type="number" placeholder="e.g. 80000" step={5000} onChange={sn('income')} /></Field>
-        <Field label="Monthly debts" prefix="$"><input type="number" placeholder="e.g. 400" step={50} onChange={sn('debts')} /></Field>
-        <Field label="Down payment" prefix="$"><input type="number" placeholder="e.g. 40000" step={5000} onChange={sn('down')} /></Field>
-        <Field label="Mortgage rate" suffix="%"><input type="number" placeholder="e.g. 7" step={0.1} onChange={sn('rate')} /></Field>
-        <Field label="Loan term" suffix="yrs"><input type="number" placeholder="e.g. 30" onChange={sn('term')} /></Field>
-      </InputGrid>
-      <MetricGrid>
-        <Metric label="Max home price" value={fmtUSD(maxPrice)} accent />
-        <Metric label="Max loan" value={fmtUSD(maxLoan)} />
-        <Metric label="Max monthly payment" value={fmtUSD(maxPayment)} />
-        <Metric label="Front-end limit (28%)" value={fmtUSD(maxHousingPayment28)} />
-      </MetricGrid>
-      <div className="alert alert-info" style={{ fontSize: 13 }}>Down payment of {fmtUSD(v.down)} ({fmt(v.down / maxPrice * 100, 1)}%) included. Based on 28/36 DTI rule.</div>
-    </div>
-  );
-}
-
-// ─── 17. Crypto DCA ──────────────────────────────────────────────────────────
-export function CryptoDCACalc() {
-  const [v, setV] = useState({ weekly: 50, weeks: 52, startPrice: 30000, growth: 40 });
-  const sn = n => e => setV(p => ({ ...p, [n]: parseFloat(e.target.value) || 0 }));
-
-  const data = [];
-  let coins = 0, totalInvested = 0;
-  for (let w = 1; w <= v.weeks; w++) {
-    const price = v.startPrice * Math.pow(1 + v.growth / 100, w / 52);
-    coins += v.weekly / price;
-    totalInvested += v.weekly;
-    if (w % 4 === 0) data.push({ week: w, invested: Math.round(totalInvested), value: Math.round(coins * price), coins: parseFloat(coins.toFixed(6)) });
+  function calc() {
+    const loan = parseFloat(v.loan), rate = parseFloat(v.rate), term = parseFloat(v.term), extra = parseFloat(v.extra) || 0;
+    if (!loan || !rate || !term) return;
+    const r = rate / 100 / 12, n = term * 12;
+    const monthly = loan * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+    const total = monthly * n, interest = total - loan;
+    let bal = loan;
+    const chart = [];
+    for (let yr = 1; yr <= Math.min(term, 30); yr++) {
+      for (let m = 0; m < 12; m++) { const i = bal * r; bal = Math.max(0, bal - (monthly + extra - i)); if (bal === 0) break; }
+      chart.push({ year: 'Y' + yr, balance: Math.round(bal) });
+      if (bal === 0) break;
+    }
+    setRes({ monthly, total, interest, chart });
   }
-  const finalPrice = v.startPrice * Math.pow(1 + v.growth / 100, 1);
-  const currentValue = coins * finalPrice;
-  const avgCost = coins > 0 ? totalInvested / coins : 0;
-  const gain = currentValue - totalInvested;
 
   return (
     <div>
       <InputGrid>
-        <Field label="Weekly investment" prefix="$"><input type="number" placeholder="e.g. 50" step={10} onChange={sn('weekly')} /></Field>
-        <Field label="Duration (weeks)" suffix="wks"><input type="number" placeholder="e.g. 52" min={4} max={260} onChange={sn('weeks')} /></Field>
-        <Field label="Start price" prefix="$"><input type="number" placeholder="e.g. 30000" step={1000} onChange={sn('startPrice')} /></Field>
-        <Field label="Annual growth" suffix="%"><input type="number" placeholder="e.g. 40" step={5} onChange={sn('growth')} /></Field>
+        <Field label="Loan amount" prefix="$"><input type="number" placeholder="e.g. 320000" onChange={s('loan')} /></Field>
+        <Field label="Interest rate" suffix="%"><input type="number" placeholder="e.g. 6.5" step={0.1} onChange={s('rate')} /></Field>
+        <Field label="Loan term" suffix="yrs"><input type="number" placeholder="e.g. 30" onChange={s('term')} /></Field>
+        <Field label="Extra payment / mo" prefix="$"><input type="number" placeholder="e.g. 200 (optional)" onChange={s('extra')} /></Field>
       </InputGrid>
-      <MetricGrid>
-        <Metric label="Portfolio value" value={fmtUSD(currentValue)} accent />
-        <Metric label="Total invested" value={fmtUSD(totalInvested)} />
-        <Metric label="Gain/Loss" value={fmtUSD(gain)} color={gain >= 0 ? 'var(--green)' : 'var(--red)'} />
-        <Metric label="Avg cost basis" value={fmtUSD(avgCost)} sub="per coin" />
-      </MetricGrid>
-      <ChartWrap height={200}>
-        <AreaChart data={data}>
-          <XAxis dataKey="week" stroke="var(--text-3)" tick={{ fontSize: 11 }} tickFormatter={w => 'W' + w} />
-          <YAxis stroke="var(--text-3)" tick={{ fontSize: 11 }} tickFormatter={n => '$' + (n >= 1000 ? (n/1000).toFixed(0)+'k' : n)} />
-          <Tooltip contentStyle={TT_STYLE} formatter={v => fmtUSD(v)} />
-          <Area type="monotone" dataKey="invested" fill="rgba(59,130,246,0.1)" stroke="#3b82f6" strokeWidth={1.5} name="Invested" />
-          <Area type="monotone" dataKey="value" fill="rgba(139,92,246,0.1)" stroke="#8b5cf6" strokeWidth={2} name="Portfolio value" />
-        </AreaChart>
-      </ChartWrap>
+      <CalcBtn onClick={calc} onCalcUsed={onCalcUsed} />
+      {res && <>
+        <MetricGrid>
+          <Metric label="Monthly payment" value={'$' + Math.round(res.monthly).toLocaleString()} accent />
+          <Metric label="Total interest" value={'$' + Math.round(res.interest).toLocaleString()} color="var(--red)" />
+          <Metric label="Total cost" value={'$' + Math.round(res.total).toLocaleString()} />
+        </MetricGrid>
+        <ChartWrap height={180}>
+          <AreaChart data={res.chart}>
+            <XAxis dataKey="year" stroke="var(--text-3)" tick={{ fontSize: 11 }} />
+            <YAxis stroke="var(--text-3)" tick={{ fontSize: 11 }} tickFormatter={n => '$' + (n >= 1000 ? (n/1000).toFixed(0)+'k' : n)} />
+            <Tooltip contentStyle={TT_STYLE} formatter={v => '$' + v.toLocaleString()} />
+            <Area type="monotone" dataKey="balance" stroke="var(--accent)" fill="rgba(59,130,246,0.15)" name="Remaining balance" />
+          </AreaChart>
+        </ChartWrap>
+      </>}
     </div>
   );
 }
 
-// ─── 18. Crypto Profit/Loss ───────────────────────────────────────────────────
-export function CryptoProfitCalc() {
-  const [v, setV] = useState({ buyPrice: 30000, sellPrice: 45000, qty: 0.5, fee: 0.1, holdMonths: 13 });
-  const sn = n => e => setV(p => ({ ...p, [n]: parseFloat(e.target.value) || 0 }));
+export function RentalROICalc({ onCalcUsed }) {
+  const [v, setV] = useState({ price: '', down: '', rate: '', rent: '', vacancy: '', expenses: '' });
+  const [res, setRes] = useState(null);
+  const s = n => e => setV(p => ({ ...p, [n]: e.target.value }));
 
-  const invested = v.buyPrice * v.qty;
-  const proceeds = v.sellPrice * v.qty;
-  const fees = (invested + proceeds) * (v.fee / 100);
-  const gross = proceeds - invested;
-  const net = gross - fees;
-  const pct = invested > 0 ? (net / invested) * 100 : 0;
-  const isLongTerm = v.holdMonths >= 12;
-  const taxRate = isLongTerm ? 0.15 : 0.25;
-  const taxOwed = net > 0 ? net * taxRate : 0;
-  const afterTax = net - taxOwed;
+  function calc() {
+    const price = parseFloat(v.price), down = parseFloat(v.down) || price * 0.25,
+          rate = parseFloat(v.rate) || 0, rent = parseFloat(v.rent),
+          vacancy = parseFloat(v.vacancy) || 5, expenses = parseFloat(v.expenses) || 0;
+    if (!price || !rent) return;
+    const effRent = rent * (1 - vacancy / 100);
+    const noi = effRent * 12 - expenses * 12;
+    const capRate = (noi / price) * 100;
+    let mortgage = 0;
+    if (rate > 0) { const r = rate/100/12, n = 30*12, p = price - down; mortgage = p > 0 ? p*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1) : 0; }
+    const cashFlow = effRent - expenses - mortgage;
+    const coc = down > 0 ? (cashFlow * 12 / down) * 100 : 0;
+    setRes({ noi, capRate, cashFlow, coc });
+  }
 
   return (
     <div>
       <InputGrid>
-        <Field label="Buy price" prefix="$"><input type="number" placeholder="e.g. 30000" step={100} onChange={sn('buyPrice')} /></Field>
-        <Field label="Sell price" prefix="$"><input type="number" placeholder="e.g. 45000" step={100} onChange={sn('sellPrice')} /></Field>
-        <Field label="Quantity (coins)"><input type="number" placeholder="e.g. 0.5" step={0.01} onChange={sn('qty')} /></Field>
-        <Field label="Exchange fee" suffix="%"><input type="number" placeholder="e.g. 0.1" step={0.05} onChange={sn('fee')} /></Field>
-        <Field label="Hold period" suffix="mo"><input type="number" placeholder="e.g. 13" min={0} onChange={sn('holdMonths')} /></Field>
+        <Field label="Purchase price" prefix="$"><input type="number" placeholder="e.g. 250000" onChange={s('price')} /></Field>
+        <Field label="Down payment" prefix="$"><input type="number" placeholder="e.g. 62500" onChange={s('down')} /></Field>
+        <Field label="Mortgage rate %" suffix="%"><input type="number" placeholder="e.g. 6.5 (optional)" step={0.1} onChange={s('rate')} /></Field>
+        <Field label="Monthly rent" prefix="$"><input type="number" placeholder="e.g. 2200" onChange={s('rent')} /></Field>
+        <Field label="Vacancy %" suffix="%"><input type="number" placeholder="e.g. 5" onChange={s('vacancy')} /></Field>
+        <Field label="Monthly expenses" prefix="$"><input type="number" placeholder="e.g. 400" onChange={s('expenses')} /></Field>
       </InputGrid>
-      <MetricGrid>
-        <Metric label="Net P&L" value={fmtUSD(net)} color={net >= 0 ? 'var(--green)' : 'var(--red)'} accent />
-        <Metric label="Return" value={fmtPct(pct)} color={pct >= 0 ? 'var(--green)' : 'var(--red)'} />
-        <Metric label="Tax owed (est.)" value={fmtUSD(taxOwed)} sub={isLongTerm ? '15% long-term' : '25% short-term'} color="var(--amber)" />
-        <Metric label="After-tax profit" value={fmtUSD(afterTax)} color={afterTax >= 0 ? 'var(--green)' : 'var(--red)'} />
-      </MetricGrid>
+      <CalcBtn onClick={calc} onCalcUsed={onCalcUsed} />
+      {res && <>
+        <MetricGrid>
+          <Metric label="Cap rate" value={res.capRate.toFixed(2) + '%'} color={res.capRate >= 6 ? 'var(--green)' : res.capRate >= 4 ? 'var(--amber)' : 'var(--red)'} accent />
+          <Metric label="Monthly cash flow" value={'$' + Math.round(res.cashFlow).toLocaleString()} color={res.cashFlow >= 0 ? 'var(--green)' : 'var(--red)'} />
+          <Metric label="Annual NOI" value={'$' + Math.round(res.noi).toLocaleString()} />
+          <Metric label="Cash-on-cash return" value={res.coc.toFixed(1) + '%'} color={res.coc >= 8 ? 'var(--green)' : 'var(--text-1)'} />
+        </MetricGrid>
+      </>}
     </div>
   );
 }
 
-// ─── 19. Crypto Rebalancer ───────────────────────────────────────────────────
-export function CryptoRebalancerCalc() {
+export function HouseFlipCalc({ onCalcUsed }) {
+  const [v, setV] = useState({ purchase: '', rehab: '', holding: '', months: '', arv: '', sellingCost: '' });
+  const [res, setRes] = useState(null);
+  const s = n => e => setV(p => ({ ...p, [n]: e.target.value }));
+
+  function calc() {
+    const purchase = parseFloat(v.purchase), rehab = parseFloat(v.rehab) || 0,
+          holding = parseFloat(v.holding) || 0, months = parseFloat(v.months) || 6,
+          arv = parseFloat(v.arv), sellingCost = parseFloat(v.sellingCost) || 8;
+    if (!purchase || !arv) return;
+    const totalCost = purchase + rehab + holding * months + arv * (sellingCost / 100);
+    const profit = arv - totalCost;
+    const roi = (profit / totalCost) * 100;
+    const rule70 = arv * 0.7 - rehab;
+    setRes({ totalCost, profit, roi, rule70, purchase });
+  }
+
+  return (
+    <div>
+      <InputGrid>
+        <Field label="Purchase price" prefix="$"><input type="number" placeholder="e.g. 150000" onChange={s('purchase')} /></Field>
+        <Field label="Rehab / renovation" prefix="$"><input type="number" placeholder="e.g. 35000" onChange={s('rehab')} /></Field>
+        <Field label="Monthly holding cost" prefix="$"><input type="number" placeholder="e.g. 1500" onChange={s('holding')} /></Field>
+        <Field label="Holding period" suffix="mo"><input type="number" placeholder="e.g. 6" onChange={s('months')} /></Field>
+        <Field label="After repair value (ARV)" prefix="$"><input type="number" placeholder="e.g. 250000" onChange={s('arv')} /></Field>
+        <Field label="Selling costs %" suffix="%"><input type="number" placeholder="e.g. 8" step={0.5} onChange={s('sellingCost')} /></Field>
+      </InputGrid>
+      <CalcBtn onClick={calc} onCalcUsed={onCalcUsed} />
+      {res && <>
+        <MetricGrid>
+          <Metric label="Net profit" value={'$' + Math.round(res.profit).toLocaleString()} color={res.profit >= 0 ? 'var(--green)' : 'var(--red)'} accent />
+          <Metric label="ROI" value={res.roi.toFixed(1) + '%'} color={res.roi >= 20 ? 'var(--green)' : res.roi >= 10 ? 'var(--amber)' : 'var(--red)'} />
+          <Metric label="Total investment" value={'$' + Math.round(res.totalCost).toLocaleString()} />
+          <Metric label="70% rule max" value={'$' + Math.round(res.rule70).toLocaleString()} color={res.purchase <= res.rule70 ? 'var(--green)' : 'var(--red)'} />
+        </MetricGrid>
+      </>}
+    </div>
+  );
+}
+
+export function AffordabilityCalc({ onCalcUsed }) {
+  const [v, setV] = useState({ income: '', debts: '', down: '', rate: '', term: '' });
+  const [res, setRes] = useState(null);
+  const s = n => e => setV(p => ({ ...p, [n]: e.target.value }));
+
+  function calc() {
+    const income = parseFloat(v.income), debts = parseFloat(v.debts) || 0,
+          down = parseFloat(v.down) || 0, rate = parseFloat(v.rate) || 6.5, term = parseFloat(v.term) || 30;
+    if (!income) return;
+    const maxH = income * 0.28, avail = Math.max(0, income * 0.36 - debts);
+    const r = rate/100/12, n = term*12, f = (r*Math.pow(1+r,n))/(Math.pow(1+r,n)-1);
+    const maxPrice = Math.min(maxH, avail) / f + down;
+    setRes({ maxPrice, maxH, avail });
+  }
+
+  return (
+    <div>
+      <InputGrid>
+        <Field label="Gross monthly income" prefix="$"><input type="number" placeholder="e.g. 8000" onChange={s('income')} /></Field>
+        <Field label="Monthly debts (loans, cards)" prefix="$"><input type="number" placeholder="e.g. 500" onChange={s('debts')} /></Field>
+        <Field label="Down payment saved" prefix="$"><input type="number" placeholder="e.g. 50000" onChange={s('down')} /></Field>
+        <Field label="Interest rate %" suffix="%"><input type="number" placeholder="e.g. 6.5" step={0.1} onChange={s('rate')} /></Field>
+        <Field label="Loan term" suffix="yrs"><input type="number" placeholder="e.g. 30" onChange={s('term')} /></Field>
+      </InputGrid>
+      <CalcBtn onClick={calc} onCalcUsed={onCalcUsed} />
+      {res && <>
+        <div style={{ textAlign: 'center', padding: 20, background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 14, marginBottom: 16 }}>
+          <div style={{ fontSize: 14, color: 'var(--text-2)', marginBottom: 6 }}>You can comfortably afford a home up to</div>
+          <div style={{ fontSize: 48, fontWeight: 800, color: 'var(--green)', lineHeight: 1 }}>${Math.round(res.maxPrice).toLocaleString()}</div>
+        </div>
+        <MetricGrid>
+          <Metric label="Max housing (28% rule)" value={'$' + Math.round(res.maxH).toLocaleString()} />
+          <Metric label="Available after debts" value={'$' + Math.round(res.avail).toLocaleString()} />
+        </MetricGrid>
+      </>}
+    </div>
+  );
+}
+
+export function CryptoDCACalc({ onCalcUsed }) {
+  const [v, setV] = useState({ weekly: '', weeks: '', startPrice: '', growth: '' });
+  const [res, setRes] = useState(null);
+  const s = n => e => setV(p => ({ ...p, [n]: e.target.value }));
+
+  function calc() {
+    const weekly = parseFloat(v.weekly), weeks = parseFloat(v.weeks),
+          startPrice = parseFloat(v.startPrice), growth = parseFloat(v.growth) || 0;
+    if (!weekly || !weeks || !startPrice) return;
+    const data = [];
+    let totalCoins = 0, totalInvested = 0;
+    for (let w = 0; w <= weeks; w++) {
+      const price = startPrice * Math.pow(1 + growth / 100 / 52, w);
+      if (w > 0) { totalCoins += weekly / price; totalInvested += weekly; }
+      data.push({ week: w, value: Math.round(totalCoins * price), invested: Math.round(totalInvested) });
+    }
+    const finalPrice = startPrice * Math.pow(1 + growth / 100 / 52, weeks);
+    const avgCost = totalCoins > 0 ? totalInvested / totalCoins : 0;
+    const currentValue = totalCoins * finalPrice;
+    setRes({ totalCoins, totalInvested, avgCost, currentValue, pnl: currentValue - totalInvested, pct: ((currentValue - totalInvested) / totalInvested) * 100, data });
+  }
+
+  return (
+    <div>
+      <InputGrid>
+        <Field label="Weekly investment" prefix="$"><input type="number" placeholder="e.g. 50" onChange={s('weekly')} /></Field>
+        <Field label="Number of weeks"><input type="number" placeholder="e.g. 52" onChange={s('weeks')} /></Field>
+        <Field label="Start price" prefix="$"><input type="number" placeholder="e.g. 30000" onChange={s('startPrice')} /></Field>
+        <Field label="Expected annual growth %" suffix="%"><input type="number" placeholder="e.g. 40" onChange={s('growth')} /></Field>
+      </InputGrid>
+      <CalcBtn onClick={calc} onCalcUsed={onCalcUsed} />
+      {res && <>
+        <MetricGrid>
+          <Metric label="Portfolio value" value={'$' + Math.round(res.currentValue).toLocaleString()} accent />
+          <Metric label="Total invested" value={'$' + Math.round(res.totalInvested).toLocaleString()} />
+          <Metric label="P&L" value={(res.pnl >= 0 ? '+' : '') + '$' + Math.round(res.pnl).toLocaleString()} color={res.pnl >= 0 ? 'var(--green)' : 'var(--red)'} />
+          <Metric label="Return" value={(res.pct >= 0 ? '+' : '') + res.pct.toFixed(1) + '%'} color={res.pct >= 0 ? 'var(--green)' : 'var(--red)'} />
+          <Metric label="Coins accumulated" value={res.totalCoins.toFixed(4)} />
+          <Metric label="Avg cost basis" value={'$' + Math.round(res.avgCost).toLocaleString()} />
+        </MetricGrid>
+        <ChartWrap height={200}>
+          <AreaChart data={res.data}>
+            <XAxis dataKey="week" stroke="var(--text-3)" tick={{ fontSize: 11 }} />
+            <YAxis stroke="var(--text-3)" tick={{ fontSize: 11 }} tickFormatter={n => '$' + (n >= 1000 ? (n/1000).toFixed(0)+'k' : n)} />
+            <Tooltip contentStyle={TT_STYLE} formatter={v => '$' + v.toLocaleString()} />
+            <Area type="monotone" dataKey="value" stroke="var(--accent)" fill="rgba(59,130,246,0.12)" name="Portfolio value" />
+            <Area type="monotone" dataKey="invested" stroke="var(--text-3)" fill="rgba(148,163,184,0.08)" name="Invested" />
+          </AreaChart>
+        </ChartWrap>
+      </>}
+    </div>
+  );
+}
+
+export function CryptoProfitCalc({ onCalcUsed }) {
+  const [v, setV] = useState({ buyPrice: '', sellPrice: '', qty: '', fee: '', holdMonths: '' });
+  const [res, setRes] = useState(null);
+  const s = n => e => setV(p => ({ ...p, [n]: e.target.value }));
+
+  function calc() {
+    const buy = parseFloat(v.buyPrice), sell = parseFloat(v.sellPrice), qty = parseFloat(v.qty),
+          fee = parseFloat(v.fee) || 0, hold = parseFloat(v.holdMonths) || 0;
+    if (!buy || !sell || !qty) return;
+    const invested = buy * qty, proceeds = sell * qty;
+    const fees = (invested + proceeds) * fee / 100;
+    const gross = proceeds - invested, net = gross - fees;
+    const pct = (net / invested) * 100;
+    const longTerm = hold >= 12;
+    const taxRate = longTerm ? 15 : 30;
+    const tax = net > 0 ? net * taxRate / 100 : 0;
+    setRes({ invested, proceeds, fees, net, pct, tax, afterTax: net - tax, taxRate, longTerm });
+  }
+
+  return (
+    <div>
+      <InputGrid>
+        <Field label="Buy price" prefix="$"><input type="number" placeholder="e.g. 30000" step={0.01} onChange={s('buyPrice')} /></Field>
+        <Field label="Sell price" prefix="$"><input type="number" placeholder="e.g. 45000" step={0.01} onChange={s('sellPrice')} /></Field>
+        <Field label="Quantity (coins)"><input type="number" placeholder="e.g. 0.5" step={0.0001} onChange={s('qty')} /></Field>
+        <Field label="Exchange fee %" suffix="%"><input type="number" placeholder="e.g. 0.1" step={0.01} onChange={s('fee')} /></Field>
+        <Field label="Held for (months)"><input type="number" placeholder="e.g. 13" onChange={s('holdMonths')} /></Field>
+      </InputGrid>
+      <CalcBtn onClick={calc} onCalcUsed={onCalcUsed} />
+      {res && <>
+        <MetricGrid>
+          <Metric label="Net P&L" value={(res.net >= 0 ? '+' : '') + '$' + Math.round(res.net).toLocaleString()} color={res.net >= 0 ? 'var(--green)' : 'var(--red)'} accent />
+          <Metric label="Return" value={(res.pct >= 0 ? '+' : '') + res.pct.toFixed(1) + '%'} color={res.pct >= 0 ? 'var(--green)' : 'var(--red)'} />
+          <Metric label="Fees paid" value={'$' + res.fees.toFixed(2)} color="var(--text-3)" />
+          {res.net > 0 && <Metric label={'Est. tax (~' + res.taxRate + '%)'} value={'$' + Math.round(res.tax).toLocaleString()} color="var(--amber)" />}
+          {res.net > 0 && <Metric label="After-tax profit" value={'$' + Math.round(res.afterTax).toLocaleString()} color="var(--green)" />}
+        </MetricGrid>
+      </>}
+    </div>
+  );
+}
+
+export function CryptoRebalancerCalc({ onCalcUsed }) {
   const [holdings, setHoldings] = useState([
     { coin: 'Bitcoin', price: 45000, qty: 0.5, target: 50 },
     { coin: 'Ethereum', price: 2500, qty: 4, target: 30 },
@@ -970,76 +1019,93 @@ export function CryptoRebalancerCalc() {
 }
 
 // ─── 20. Mining Profitability ─────────────────────────────────────────────────
-export function MiningProfitCalc() {
-  const [v, setV] = useState({ hashrate: 100, power: 3200, electric: 0.12, poolFee: 1, blockReward: 3.125, difficulty: 83000000000000, price: 45000 });
-  const sn = n => e => setV(p => ({ ...p, [n]: parseFloat(e.target.value) || 0 }));
+export function MiningProfitCalc({ onCalcUsed }) {
+  const [v, setV] = useState({ hashrate: '', power: '', electric: '', poolFee: '', blockReward: '', difficulty: '', price: '' });
+  const [res, setRes] = useState(null);
+  const s = n => e => setV(p => ({ ...p, [n]: e.target.value }));
 
-  const dailyBTC = (v.hashrate * 1e12 * 86400) / (v.difficulty * 2 ** 32) * v.blockReward * (1 - v.poolFee / 100);
-  const dailyRevenue = dailyBTC * v.price;
-  const dailyPower = (v.power / 1000) * 24 * v.electric;
-  const dailyProfit = dailyRevenue - dailyPower;
-  const monthlyProfit = dailyProfit * 30;
-  const breakeven = dailyProfit > 0 ? v.power * v.hashrate / dailyProfit / 30 : Infinity;
+  function calc() {
+    const hr = parseFloat(v.hashrate), power = parseFloat(v.power), electric = parseFloat(v.electric),
+          poolFee = parseFloat(v.poolFee) || 1, reward = parseFloat(v.blockReward) || 3.125,
+          diff = parseFloat(v.difficulty) || 83e12, price = parseFloat(v.price);
+    if (!hr || !power || !electric || !price) return;
+    const dailyBTC = (hr * 1e12 * 86400) / (diff * Math.pow(2, 32)) * reward * (1 - poolFee / 100);
+    const dailyRev = dailyBTC * price;
+    const dailyPower = (power / 1000) * 24 * electric;
+    const dailyProfit = dailyRev - dailyPower;
+    setRes({ dailyBTC, dailyRev, dailyPower, dailyProfit, monthly: dailyProfit * 30, yearly: dailyProfit * 365 });
+  }
 
   return (
     <div>
       <InputGrid>
-        <Field label="Hashrate (TH/s)"><input type="number" placeholder="e.g. 100" step={10} onChange={sn('hashrate')} /></Field>
-        <Field label="Power draw (W)"><input type="number" placeholder="e.g. 3200" step={100} onChange={sn('power')} /></Field>
-        <Field label="Electricity ($/kWh)" prefix="$"><input type="number" placeholder="e.g. 0.12" step={0.01} onChange={sn('electric')} /></Field>
-        <Field label="Pool fee" suffix="%"><input type="number" placeholder="e.g. 1" step={0.1} onChange={sn('poolFee')} /></Field>
-        <Field label="Block reward (BTC)"><input type="number" placeholder="e.g. 3.125" step={0.001} onChange={sn('blockReward')} /></Field>
-        <Field label="BTC price" prefix="$"><input type="number" placeholder="e.g. 45000" step={1000} onChange={sn('price')} /></Field>
+        <Field label="Hashrate (TH/s)"><input type="number" placeholder="e.g. 110" onChange={s('hashrate')} /></Field>
+        <Field label="Power usage (W)"><input type="number" placeholder="e.g. 3250" onChange={s('power')} /></Field>
+        <Field label="Electricity ($/kWh)" prefix="$"><input type="number" placeholder="e.g. 0.08" step={0.01} onChange={s('electric')} /></Field>
+        <Field label="BTC price" prefix="$"><input type="number" placeholder="e.g. 65000" onChange={s('price')} /></Field>
+        <Field label="Pool fee %" suffix="%"><input type="number" placeholder="e.g. 1" step={0.1} onChange={s('poolFee')} /></Field>
+        <Field label="Block reward"><input type="number" placeholder="e.g. 3.125" step={0.001} onChange={s('blockReward')} /></Field>
       </InputGrid>
-      <MetricGrid>
-        <Metric label="Daily profit" value={fmtUSD(dailyProfit)} color={dailyProfit >= 0 ? 'var(--green)' : 'var(--red)'} accent />
-        <Metric label="Monthly profit" value={fmtUSD(monthlyProfit)} color={monthlyProfit >= 0 ? 'var(--green)' : 'var(--red)'} />
-        <Metric label="Daily power cost" value={fmtUSD(dailyPower)} color="var(--red)" />
-        <Metric label="BTC mined / day" value={dailyBTC.toFixed(6)} sub="BTC" color="var(--amber)" />
-      </MetricGrid>
+      <CalcBtn onClick={calc} onCalcUsed={onCalcUsed} />
+      {res && <>
+        <MetricGrid>
+          <Metric label="Daily profit" value={'$' + res.dailyProfit.toFixed(2)} color={res.dailyProfit >= 0 ? 'var(--green)' : 'var(--red)'} accent />
+          <Metric label="Daily BTC mined" value={res.dailyBTC.toFixed(6) + ' BTC'} />
+          <Metric label="Daily revenue" value={'$' + res.dailyRev.toFixed(2)} color="var(--green)" />
+          <Metric label="Daily power cost" value={'$' + res.dailyPower.toFixed(2)} color="var(--red)" />
+          <Metric label="Monthly profit" value={'$' + Math.round(res.monthly).toLocaleString()} color={res.monthly >= 0 ? 'var(--green)' : 'var(--red)'} />
+          <Metric label="Yearly profit" value={'$' + Math.round(res.yearly).toLocaleString()} color={res.yearly >= 0 ? 'var(--green)' : 'var(--red)'} />
+        </MetricGrid>
+      </>}
     </div>
   );
 }
 
-// ─── 21. Liquidation Price ───────────────────────────────────────────────────
-export function LiquidationPriceCalc() {
+export function LiquidationPriceCalc({ onCalcUsed }) {
+  const [v, setV] = useState({ entry: '', leverage: '', size: '', maintenance: '' });
   const [dir, setDir] = useState('long');
-  const [v, setV] = useState({ entry: 45000, leverage: 10, size: 1000, maintenance: 0.5 });
-  const sn = n => e => setV(p => ({ ...p, [n]: parseFloat(e.target.value) || 0 }));
+  const [res, setRes] = useState(null);
+  const s = n => e => setV(p => ({ ...p, [n]: e.target.value }));
 
-  const margin = v.size / v.leverage;
-  const liqPct = 1 / v.leverage - v.maintenance / 100;
-  const liquidation = dir === 'long'
-    ? v.entry * (1 - liqPct)
-    : v.entry * (1 + liqPct);
-  const distPct = Math.abs(liquidation - v.entry) / v.entry * 100;
-  const maxLoss = margin;
+  function calc() {
+    const entry = parseFloat(v.entry), lev = parseFloat(v.leverage),
+          maintenance = parseFloat(v.maintenance) || 0.5;
+    if (!entry || !lev) return;
+    const mm = maintenance / 100;
+    const liqPrice = dir === 'long' ? entry * (1 - 1/lev + mm) : entry * (1 + 1/lev - mm);
+    const distPct = Math.abs(liqPrice - entry) / entry * 100;
+    setRes({ liqPrice, distPct, entry, lev, dir });
+  }
 
   return (
     <div>
       <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
-        <DirBtn label="Long" icon={TrendingUp} active={dir === 'long'} activeClass="long" onClick={() => setDir('long')} />
-        <DirBtn label="Short" icon={TrendingDown} active={dir === 'short'} activeClass="short" onClick={() => setDir('short')} />
+        {['long', 'short'].map(d => (
+          <button key={d} onClick={() => setDir(d)} className="btn btn-sm"
+            style={{ flex: 1, background: dir === d ? (d === 'long' ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)') : 'var(--bg-2)', borderColor: dir === d ? (d === 'long' ? 'var(--green)' : 'var(--red)') : 'var(--border)', color: dir === d ? (d === 'long' ? 'var(--green)' : 'var(--red)') : 'var(--text-2)', border: '1px solid' }}>
+            {d === 'long' ? '▲ Long' : '▼ Short'}
+          </button>
+        ))}
       </div>
       <InputGrid>
-        <Field label="Entry price" prefix="$"><input type="number" placeholder="e.g. 45000" step={100} onChange={sn('entry')} /></Field>
-        <Field label="Leverage" suffix="×"><input type="number" placeholder="e.g. 10" min={1} max={125} onChange={sn('leverage')} /></Field>
-        <Field label="Position size" prefix="$"><input type="number" placeholder="e.g. 1000" step={100} onChange={sn('size')} /></Field>
-        <Field label="Maintenance margin" suffix="%"><input type="number" placeholder="e.g. 0.5" step={0.1} onChange={sn('maintenance')} /></Field>
+        <Field label="Entry price" prefix="$"><input type="number" placeholder="e.g. 65000" onChange={s('entry')} /></Field>
+        <Field label="Leverage" suffix="x"><input type="number" placeholder="e.g. 10" onChange={s('leverage')} /></Field>
+        <Field label="Position size" prefix="$"><input type="number" placeholder="e.g. 1000" onChange={s('size')} /></Field>
+        <Field label="Maintenance margin %" suffix="%"><input type="number" placeholder="e.g. 0.5" step={0.1} onChange={s('maintenance')} /></Field>
       </InputGrid>
-      <MetricGrid>
-        <Metric label="Liquidation price" value={fmtUSD(liquidation)} color="var(--red)" accent />
-        <Metric label="Distance to liq." value={fmtPct(distPct)} sub={dir === 'long' ? 'price drop needed' : 'price rise needed'} />
-        <Metric label="Margin used" value={fmtUSD(margin)} />
-        <Metric label="Max loss" value={fmtUSD(maxLoss)} color="var(--red)" />
-      </MetricGrid>
-      <div className="alert alert-warning" style={{ fontSize: 12, marginTop: 4 }}>⚠ Leverage magnifies losses. Use stop-losses and never risk more than you can afford to lose.</div>
+      <CalcBtn onClick={calc} onCalcUsed={onCalcUsed} />
+      {res && <>
+        <div style={{ textAlign: 'center', padding: 20, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: 14, marginBottom: 16 }}>
+          <div style={{ fontSize: 14, color: 'var(--text-2)', marginBottom: 6 }}>Your {dir} position gets liquidated at</div>
+          <div style={{ fontSize: 42, fontWeight: 800, color: 'var(--red)', lineHeight: 1 }}>${res.liqPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+          <div style={{ fontSize: 13, color: 'var(--text-3)', marginTop: 6 }}>{res.distPct.toFixed(1)}% away from your entry of ${res.entry.toLocaleString()}</div>
+        </div>
+      </>}
     </div>
   );
 }
 
-// ─── 22. Trading Compounding Plan ────────────────────────────────────────────
-export function TradingPlanCalc() {
+export function TradingPlanCalc({ onCalcUsed }) {
   const [bal, setBal] = useState('');
   const [pr, setPr]   = useState('');
   const [sl, setSl]   = useState('');
@@ -1307,7 +1373,7 @@ function F2({label,children,pre,suf}){
   );
 }
 function Grid2({children}){return <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(140px,1fr))',gap:12,marginBottom:16}}>{children}</div>;}
-function CalcBtn2({onClick,label='Calculate'}){return<button onClick={onClick} className="btn btn-primary" style={{width:'100%',height:46,fontSize:14,fontWeight:700,marginBottom:20}}>⚡ {label}</button>;}
+function CalcBtn2({onClick,label='Calculate',onCalcUsed}){return<button onClick={()=>{onClick&&onClick();onCalcUsed&&onCalcUsed();}} className="btn btn-primary" style={{width:'100%',height:46,fontSize:14,fontWeight:700,marginBottom:20}}>⚡ {label}</button>;}
 function MG2({children}){return <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(120px,1fr))',gap:10,marginBottom:16}}>{children}</div>;}
 function M2({label,value,sub,color,big,accent}){
   return(
@@ -1378,7 +1444,7 @@ export function PipValueCalc(){
       <F2 label="Number of Lots"><input type="number" placeholder="e.g. 1.5" onChange={s('lots')}/></F2>
       <F2 label="Current Price (optional)"><input type="number" placeholder="e.g. 1.0850" onChange={s('price')}/></F2>
     </Grid2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div>
       <MG2>
         <M2 label="Pip Value" value={fmtU2(res.total)} big accent/>
@@ -1413,7 +1479,7 @@ export function RiskRewardCalc(){
       <F2 label="Take Profit" pre="$"><input type="number" placeholder="e.g. 115.00" onChange={s('target')}/></F2>
       <F2 label="Win Rate % (optional)" suf="%"><input type="number" placeholder="e.g. 55" onChange={s('winRate')}/></F2>
     </Grid2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div>
       <MG2>
         <M2 label="Risk/Reward" value={`1 : ${fmt2(res.rr)}`} big accent color={res.rr>=2?'var(--green)':res.rr>=1?'var(--amber)':'var(--red)'}/>
@@ -1458,7 +1524,7 @@ export function ProfitLossCalc(){
       <F2 label="Quantity / Shares"><input type="number" placeholder="e.g. 100" onChange={s('qty')}/></F2>
       <F2 label="Fee %" suf="%"><input type="number" placeholder="e.g. 0.1" onChange={s('fee')}/></F2>
     </Grid2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div>
       <MG2>
         <M2 label="Net Profit/Loss" value={(res.netPL>=0?'+':'')+fmtU2(res.netPL)} big accent color={res.netPL>=0?'var(--green)':'var(--red)'}/>
@@ -1490,7 +1556,7 @@ export function MarginCalc(){
       <F2 label="Quantity"><input type="number" placeholder="e.g. 0.5" onChange={s('qty')}/></F2>
       <F2 label="Leverage" suf="x"><input type="number" placeholder="e.g. 10" onChange={s('leverage')}/></F2>
     </Grid2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div>
       <MG2>
         <M2 label="Required Margin" value={fmtU2(res.margin)} big accent/>
@@ -1527,7 +1593,7 @@ export function CurrencyConverterCalc(){
       <F2 label="From"><select className="input" value={v.from} onChange={s('from')}>{CURRENCIES.map(c=><option key={c}>{c}</option>)}</select></F2>
       <F2 label="To"><select className="input" value={v.to} onChange={s('to')}>{CURRENCIES.map(c=><option key={c}>{c}</option>)}</select></F2>
     </Grid2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div style={{textAlign:'center',padding:'24px',background:'var(--bg-1)',borderRadius:14}}>
       <div style={{fontSize:40,fontWeight:800,fontFamily:'var(--font-display)',color:'var(--text-1)',marginBottom:4}}>
         {fmt2(res.converted,2)} <span style={{color:'var(--accent)'}}>{res.to}</span>
@@ -1560,7 +1626,7 @@ export function StockReturnCalc(){
       <F2 label="Annual Dividend/Share" pre="$"><input type="number" placeholder="e.g. 2.50 (optional)" onChange={s('dividend')}/></F2>
       <F2 label="Holding Period (years)"><input type="number" placeholder="e.g. 3" onChange={s('years')}/></F2>
     </Grid2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div>
       <MG2>
         <M2 label="Total Return" value={(res.pct>=0?'+':'')+fmtP2(res.pct)} big accent color={res.pct>=0?'var(--green)':'var(--red)'}/>
@@ -1589,7 +1655,7 @@ export function DrawdownRecoveryCalc(){
   }
   return(<div>
     <Grid2><F2 label="Your Loss / Drawdown %" suf="%"><input type="number" placeholder="e.g. 30" min="1" max="99" onChange={e=>setLoss(e.target.value)}/></F2></Grid2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div>
       <div style={{textAlign:'center',padding:'24px',background:'rgba(239,68,68,0.08)',border:'1px solid rgba(239,68,68,0.2)',borderRadius:14,marginBottom:16}}>
         <div style={{fontSize:14,color:'var(--text-2)',marginBottom:6}}>To recover from a <strong style={{color:'var(--red)'}}>{fmt2(res.loss,1)}% loss</strong>, you need to gain</div>
@@ -1651,7 +1717,7 @@ export function CalorieDeficitCalc(){
       <F2 label="Timeframe (weeks)"><input type="number" placeholder="e.g. 12" onChange={s('weeks')}/></F2>
     </Grid2>
     <F2 label="Activity Level"><select className="input" value={v.activity} onChange={s('activity')} style={{marginBottom:16}}>{ACTS.map(([val,lbl])=><option key={val} value={val}>{lbl}</option>)}</select></F2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div>
       <div style={{textAlign:'center',padding:'20px',background:'var(--bg-1)',borderRadius:14,marginBottom:16}}>
         <div style={{fontSize:13,color:'var(--text-2)',marginBottom:4}}>Your daily calorie target</div>
@@ -1704,7 +1770,7 @@ export function TDEECalc(){
       <F2 label={`Height (${unit==='metric'?'cm':'in'})`}><input type="number" placeholder={unit==='metric'?'e.g. 175':'e.g. 69'} onChange={s('height')}/></F2>
     </Grid2>
     <F2 label="Activity Level"><select className="input" value={v.activity} onChange={s('activity')} style={{marginBottom:16}}>{ACTS.map(([val,lbl])=><option key={val} value={val}>{lbl}</option>)}</select></F2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div>
       <div style={{textAlign:'center',padding:'20px',background:'var(--bg-1)',borderRadius:14,marginBottom:16}}>
         <div style={{fontSize:14,color:'var(--text-2)',marginBottom:4}}>Your body burns approximately</div>
@@ -1756,7 +1822,7 @@ export function IdealWeightCalc(){
       <F2 label="Unit"><select className="input" value={v.unit} onChange={s('unit')}><option value="cm">Centimeters (cm)</option><option value="in">Inches (in)</option></select></F2>
       <F2 label="Frame Size"><select className="input" value={v.frame} onChange={s('frame')}><option value="small">Small frame</option><option value="medium">Medium frame</option><option value="large">Large frame</option></select></F2>
     </Grid2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div>
       <div style={{textAlign:'center',padding:'20px',background:'var(--bg-1)',borderRadius:14,marginBottom:16}}>
         <div style={{fontSize:14,color:'var(--text-2)',marginBottom:8}}>Your ideal weight range is</div>
@@ -1792,7 +1858,7 @@ export function ProteinIntakeCalc(){
       <F2 label="Unit"><select className="input" value={v.unit} onChange={s('unit')}><option value="kg">Kilograms</option><option value="lbs">Pounds</option></select></F2>
       <F2 label="Goal"><select className="input" value={v.goal} onChange={s('goal')}><option value="lose">Lose Fat</option><option value="maintain">Maintain</option><option value="bulk">Build Muscle</option><option value="athlete">Athlete/Performance</option></select></F2>
     </Grid2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div>
       <div style={{textAlign:'center',padding:'20px',background:'var(--bg-1)',borderRadius:14,marginBottom:16}}>
         <div style={{fontSize:14,color:'var(--text-2)',marginBottom:4}}>You need at least</div>
@@ -1847,7 +1913,7 @@ export function RefinanceCalc(){
       <F2 label="New Loan Term (years)"><input type="number" placeholder="e.g. 30" onChange={s('newYears')}/></F2>
       <F2 label="Closing Costs" pre="$"><input type="number" placeholder="e.g. 4000" onChange={s('closing')}/></F2>
     </Grid2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div>
       <MG2>
         <M2 label="Monthly Savings" value={fmtU2(res.savings)} big accent color={res.savings>=0?'var(--green)':'var(--red)'}/>
@@ -1888,7 +1954,7 @@ export function DownPaymentCalc(){
       <F2 label="Monthly Savings" pre="$"><input type="number" placeholder="e.g. 1500" onChange={s('monthly')}/></F2>
       <F2 label="Savings Rate (APY) %" suf="%"><input type="number" placeholder="e.g. 4.5 (HYSA)" onChange={s('rate')}/></F2>
     </Grid2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div>
       <div style={{textAlign:'center',padding:'20px',background:'var(--bg-1)',borderRadius:14,marginBottom:16}}>
         <div style={{fontSize:14,color:'var(--text-2)',marginBottom:4}}>You'll reach your {fmtP2(res.pct,0)} down payment in</div>
@@ -1947,7 +2013,7 @@ export function StampDutyCalc(){
       <F2 label="Country"><select className="input" value={v.country} onChange={s('country')}><option value="UK">United Kingdom (SDLT)</option><option value="AU">Australia (NSW)</option><option value="US">United States (approx)</option></select></F2>
       <F2 label="First-Time Buyer?"><select className="input" value={v.firstBuyer} onChange={s('firstBuyer')}><option value="yes">Yes</option><option value="no">No</option></select></F2>
     </Grid2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div>
       <MG2>
         <M2 label="Stamp Duty / Tax" value={fmtU2(res.duty)} big accent/>
@@ -1998,7 +2064,7 @@ export function AmortizationCalc(){
       <F2 label="Loan Term (years)"><input type="number" placeholder="e.g. 30" onChange={s('years')}/></F2>
       <F2 label="Extra Monthly Payment" pre="$"><input type="number" placeholder="e.g. 200 (optional)" onChange={s('extra')}/></F2>
     </Grid2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div>
       <MG2>
         <M2 label="Monthly Payment" value={fmtU2(res.monthly)} big accent/>
@@ -2055,7 +2121,7 @@ export function GrossRentalYieldCalc(){
       <F2 label="Monthly Rent" pre="$"><input type="number" placeholder="e.g. 1800" onChange={s('rent')}/></F2>
       <F2 label="Monthly Expenses" pre="$"><input type="number" placeholder="e.g. 400 (optional)" onChange={s('expenses')}/></F2>
     </Grid2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div>
       <MG2>
         <M2 label="Gross Yield" value={fmtP2(res.gross,2)} big accent color={res.gross>=6?'var(--green)':res.gross>=4?'var(--amber)':'var(--red)'}/>
@@ -2099,7 +2165,7 @@ export function CryptoTaxCalc(){
       <F2 label="Held for (months)"><input type="number" placeholder="e.g. 14" onChange={s('held')}/></F2>
       <F2 label="Country"><select className="input" value={v.country} onChange={s('country')}><option value="US">United States</option><option value="UK">United Kingdom</option><option value="EU">Europe (approx)</option></select></F2>
     </Grid2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div>
       <MG2>
         <M2 label="Estimated Tax" value={fmtU2(res.tax)} big accent color="var(--amber)"/>
@@ -2136,7 +2202,7 @@ export function CryptoPositionSizeCalc(){
       <F2 label="Entry Price" pre="$"><input type="number" placeholder="e.g. 65000" onChange={s('entry')}/></F2>
       <F2 label="Stop Loss Price" pre="$"><input type="number" placeholder="e.g. 60000" onChange={s('stop')}/></F2>
     </Grid2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div>
       <MG2>
         <M2 label="Coins to Buy" value={fmt2(res.qty,4)} big accent/>
@@ -2176,7 +2242,7 @@ export function StakingRewardsCalc(){
       <F2 label="Token Price (optional)" pre="$"><input type="number" placeholder="e.g. 2.50" onChange={s('price')}/></F2>
       <F2 label="Compounding"><select className="input" value={v.compound} onChange={s('compound')}><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option></select></F2>
     </Grid2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div style={{display:'flex',flexDirection:'column',gap:8}}>
       {res.data.map((d,i)=>(
         <div key={i} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'14px 16px',background:i===3?'rgba(59,130,246,0.1)':'var(--bg-1)',border:`1px solid ${i===3?'var(--accent)':'var(--border)'}`,borderRadius:12}}>
@@ -2210,7 +2276,7 @@ export function ATHReturnCalc(){
       <F2 label="All-Time High (ATH)" pre="$"><input type="number" placeholder="e.g. 73000" onChange={s('ath')}/></F2>
       <F2 label="All-Time Low (ATL)" pre="$"><input type="number" placeholder="e.g. 3000 (optional)" onChange={s('atl')}/></F2>
     </Grid2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div>
       <MG2>
         <M2 label="From ATH" value={fmtP2(res.fromATH,1)} big accent color="var(--red)"/>
@@ -2263,7 +2329,7 @@ export function FundingRateCalc(){
       <F2 label="Funding Rate %" suf="%"><input type="number" placeholder="e.g. 0.01" onChange={s('rate')}/></F2>
       <F2 label="Frequency"><select className="input" value={v.frequency} onChange={s('frequency')}><option value="8h">Every 8 hours</option><option value="4h">Every 4 hours</option><option value="1h">Every hour</option></select></F2>
     </Grid2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div>
       <MG2>
         <M2 label={`Per Payment (${v.frequency})`} value={(res.paying?'-':'+')+fmtU2(Math.abs(res.perPayment))} big accent color={res.paying?'var(--red)':'var(--green)'}/>
@@ -2307,7 +2373,7 @@ export function BTCSavingsPlanCalc(){
       <F2 label="Target BTC Price" pre="$"><input type="number" placeholder="e.g. 150000" onChange={s('targetPrice')}/></F2>
       <F2 label="Investment Period (years)"><input type="number" placeholder="e.g. 5" onChange={s('years')}/></F2>
     </Grid2>
-    <CalcBtn2 onClick={calc}/>
+    <CalcBtn2 onClick={calc} onCalcUsed={onCalcUsed} />
     {res&&<div>
       <MG2>
         <M2 label="BTC Accumulated" value={fmt2(res.btc,4)+' BTC'} big accent/>
