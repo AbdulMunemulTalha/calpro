@@ -246,7 +246,13 @@ export default function Layout() {
           </div>
           <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.5rem', display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'space-between', alignItems: 'center' }}>
             <p style={{ fontSize: 13, color: 'var(--text-3)' }}>© {new Date().getFullYear()} CalPro. All rights reserved.</p>
-            <p style={{ fontSize: 12, color: 'var(--text-3)' }}>For educational purposes only. Not financial advice.</p>
+            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center' }}>
+              <p style={{ fontSize: 12, color: 'var(--text-3)' }}>For educational purposes only. Not financial advice.</p>
+              <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer"
+                style={{ fontSize: 11, color: 'var(--text-3)', textDecoration: 'underline' }}>
+                How Google uses data
+              </a>
+            </div>
           </div>
         </div>
       </footer>

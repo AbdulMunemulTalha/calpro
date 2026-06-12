@@ -2,35 +2,35 @@ import React, { useEffect, useRef } from 'react';
 
 const ADSENSE_CLIENT = 'ca-pub-2580237448099674';
 
+// Label shown above every ad unit — required by Google policy
+// to clearly distinguish ads from editorial content
+function AdLabel() {
+  return (
+    <p style={{
+      fontSize: 10,
+      color: 'var(--text-3)',
+      textTransform: 'uppercase',
+      letterSpacing: '0.08em',
+      fontWeight: 500,
+      marginBottom: 4,
+      textAlign: 'center',
+    }}>
+      Advertisement
+    </p>
+  );
+}
+
 export function AdBanner({ slot, style = {} }) {
   const ref = useRef(null);
   useEffect(() => {
     try {
-      if (window.adsbygoogle) {
-        window.adsbygoogle.push({});
-      }
+      if (window.adsbygoogle) window.adsbygoogle.push({});
     } catch (e) {}
   }, []);
 
-  // Show placeholder in dev; show real ad in prod with your client ID
-  if (ADSENSE_CLIENT === 'ca-pub-XXXXXXXXXXXXXXXX') {
-    return (
-      <div style={{
-        width: '100%', height: 90,
-        background: 'var(--bg-2)',
-        border: '1px dashed var(--border)',
-        borderRadius: 'var(--radius-md)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        color: 'var(--text-3)', fontSize: 12,
-        ...style
-      }}>
-        Ad — Replace ADSENSE_CLIENT in AdSlot.jsx
-      </div>
-    );
-  }
-
   return (
     <div style={{ overflow: 'hidden', ...style }}>
+      <AdLabel />
       <ins
         ref={ref}
         className="adsbygoogle"
@@ -52,26 +52,9 @@ export function AdRect({ slot, style = {} }) {
     } catch (e) {}
   }, []);
 
-  if (ADSENSE_CLIENT === 'ca-pub-XXXXXXXXXXXXXXXX') {
-    return (
-      <div style={{
-        width: 300, height: 250,
-        background: 'var(--bg-2)',
-        border: '1px dashed var(--border)',
-        borderRadius: 'var(--radius-md)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        flexDirection: 'column', gap: 4,
-        color: 'var(--text-3)', fontSize: 12,
-        ...style
-      }}>
-        <span>Ad Rectangle (300×250)</span>
-        <span style={{ fontSize: 11 }}>Add your AdSense ID</span>
-      </div>
-    );
-  }
-
   return (
-    <div style={{ width: 300, height: 250, overflow: 'hidden', ...style }}>
+    <div style={{ width: 300, overflow: 'hidden', ...style }}>
+      <AdLabel />
       <ins
         ref={ref}
         className="adsbygoogle"
@@ -92,16 +75,15 @@ export function AffiliateBox({ affiliates = [] }) {
       borderRadius: 'var(--radius-lg)',
       padding: '1rem 1.25rem',
     }}>
-      <p style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-3)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>
+      <p style={{
+        fontSize: 11, fontWeight: 600, color: 'var(--text-3)',
+        letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10,
+      }}>
         Sponsored partners
       </p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {affiliates.map((a, i) => (
-          <a
-            key={i}
-            href={a.url}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
+          <a key={i} href={a.url} target="_blank" rel="noopener noreferrer nofollow"
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               padding: '8px 12px',
@@ -119,7 +101,9 @@ export function AffiliateBox({ affiliates = [] }) {
           </a>
         ))}
       </div>
-      <p style={{ fontSize: 10, color: 'var(--text-3)', marginTop: 8 }}>Affiliate links — we may earn a commission.</p>
+      <p style={{ fontSize: 10, color: 'var(--text-3)', marginTop: 8 }}>
+        Sponsored — we may earn a commission on purchases.
+      </p>
     </div>
   );
 }

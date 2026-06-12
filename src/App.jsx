@@ -22,6 +22,7 @@ import AdminLogin from './pages/admin/AdminLogin';
 import { AdminProvider } from './lib/AdminContext';
 import { StatsProvider } from './lib/StatsContext';
 import { ThemeProvider } from './lib/ThemeContext';
+import CookieConsent from './components/ui/CookieConsent';
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
       <AdminProvider>
         <StatsProvider>
           <BrowserRouter>
+            <CookieConsent />
             <Routes>
               <Route path="/" element={<Layout />}>
                 <Route index element={<HomePage />} />
