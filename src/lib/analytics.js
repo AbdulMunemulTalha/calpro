@@ -1,7 +1,7 @@
 // ─── Google Analytics 4 — Real Analytics ─────────────────────────────────────
 // Replace GA4_MEASUREMENT_ID with your actual GA4 ID (format: G-XXXXXXXXXX)
 // Get it free at: analytics.google.com → Admin → Create Property → Data Streams
-const GA4_ID = 'G-XXXXXXXXXX'; // ← Replace this with your real GA4 ID
+const GA4_ID = 'G-LNG3FJF7BX';
 
 // Load GA4 script once
 export function initGA4() {

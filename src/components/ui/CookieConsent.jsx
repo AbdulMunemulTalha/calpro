@@ -121,6 +121,7 @@ export default function CookieConsent() {
             </button>
             <button
               onClick={accept}
+              aria-label="Accept all cookies"
               className="btn btn-primary btn-sm"
               style={{ minWidth: 120, fontWeight: 700 }}
             >

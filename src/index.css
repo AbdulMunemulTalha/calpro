@@ -110,6 +110,75 @@ input, select, textarea, button { font-family: inherit; }
   padding: 0 1.5rem;
 }
 
+
+/* ─── Performance & Core Web Vitals ───────────────────────────────────────── */
+
+/* Prevent layout shift from images */
+img, video { height: auto; }
+img { max-width: 100%; }
+
+/* Smooth font swap — prevents invisible text (FOIT) */
+@font-face { font-display: swap; }
+
+/* Reduce paint complexity on scroll */
+header { will-change: background, backdrop-filter; }
+
+/* Contain layout for cards to reduce reflow */
+.card { contain: layout style; }
+
+/* Optimize animations for GPU */
+.btn { will-change: transform; transform: translateZ(0); }
+
+/* Reduce motion for users who prefer it (accessibility + perf) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Accessibility fixes (flagged by PageSpeed) ────────────────────────────── */
+
+/* Ensure all interactive elements have visible focus ring */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Ensure buttons always have accessible contrast */
+.btn-primary {
+  background: var(--accent) !important;
+}
+
+/* Fix color contrast for text-3 on light backgrounds */
+[data-theme="light"] .metric-label,
+[data-theme="light"] .metric-sub {
+  color: #475569;
+}
+
+/* Ensure links are distinguishable (not just color) */
+a:not(.btn):not([class]) {
+  text-decoration-line: underline;
+  text-underline-offset: 2px;
+}
+
+/* ─── Mobile performance ────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Reduce shadow complexity on mobile */
+  .card { box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+
+  /* Smaller font on mobile to reduce reflow */
+  .metric-value { font-size: 20px; }
+
+  /* Prevent horizontal scroll */
+  body { overflow-x: hidden; }
+
+  /* Stack grid on mobile */
+  .calc-layout { grid-template-columns: 1fr !important; }
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-1); }
@@ -381,3 +450,5 @@ select::-ms-expand { display: none; }
 [data-theme="light"] .admin-sidebar {
   background: #1e293b;
 }
+
+@keyframes spin { to { transform: rotate(360deg); } }

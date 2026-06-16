@@ -175,6 +175,8 @@ export default function Layout() {
             <Link to="/pricing" className="btn btn-primary btn-sm" style={{ textDecoration: 'none' }}>Go Pro</Link>
             <button
               onClick={() => setMenuOpen(v => !v)}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
               style={{ display: 'none', background: 'none', border: 'none', color: 'var(--text-1)', cursor: 'pointer', padding: 4 }}
               className="mobile-menu-btn"
             >
